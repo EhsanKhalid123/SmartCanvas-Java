@@ -1,5 +1,8 @@
 # Compiled class file
 *.class
+*.idea
+*.out
+*.openjfx-17.0.2_windows-x64_bin-sdk
 
 # Log file
 *.log

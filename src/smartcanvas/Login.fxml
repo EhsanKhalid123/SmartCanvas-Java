@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="418.0" maxWidth="471.0" minHeight="418.0" minWidth="471.0" prefHeight="418.0" prefWidth="471.0" snapToPixel="false" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smartcanvas.LoginController">
+   <children>
+      <TextField fx:id="loginUsername" layoutX="108.0" layoutY="148.0" prefHeight="34.0" prefWidth="254.0" />
+      <Text layoutX="108.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+      <Text layoutX="108.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Text>
+      <PasswordField fx:id="loginPassword" layoutX="108.0" layoutY="222.0" prefHeight="34.0" prefWidth="253.0" />
+      <Button fx:id="loginSignin" layoutX="140.0" layoutY="318.0" mnemonicParsing="false" onAction="#login" prefHeight="34.0" prefWidth="75.0" text="Sign In" />
+      <Button fx:id="loginClose" layoutX="255.0" layoutY="318.0" mnemonicParsing="false" onAction="#close" prefHeight="34.0" prefWidth="75.0" text="Close" />
+      <Text layoutX="57.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Smart Canvas">
+         <font>
+            <Font name="System Bold Italic" size="29.0" />
+         </font>
+      </Text>
+      <Text layoutX="206.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <Hyperlink fx:id="loginNewUser" layoutX="178.0" layoutY="369.0" onAction="#registerWindow" text="or create a new user" />
+      <Label fx:id="message" alignment="CENTER" contentDisplay="CENTER" layoutX="109.0" layoutY="272.0" prefHeight="28.0" prefWidth="253.0" textAlignment="CENTER" textFill="RED">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
