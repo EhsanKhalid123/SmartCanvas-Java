@@ -1,11 +1,13 @@
 package controller;
 
+import dao.Database;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import model.Model;
 
 import java.io.IOException;
 
@@ -14,8 +16,20 @@ public class Main extends Application {
     private static Scene scene;
     private static Stage stage;
 
+    private Model model;
+    private Database database;
+
+    @Override
+    public void init() {
+        model = new Model();
+        database = new Database();
+        database.createDatabase();
+    }
+
     @Override
     public void start(Stage stage) throws Exception{
+        model.setup();
+
 
         scene = new Scene(openFXML("resources/views/login"));
         stage.setScene(scene);

@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import dao.UserDao;
+import model.Model;
 
 public class NewCanvasController {
     @FXML
@@ -37,23 +37,23 @@ public class NewCanvasController {
 
         if (!length.isEmpty() || !width.isEmpty()) {
 
-            UserDao.pane.setMinHeight(Double.parseDouble(length));
-            UserDao.pane.setMinWidth(Double.parseDouble(width));
+            Model.pane.setMinHeight(Double.parseDouble(length));
+            Model.pane.setMinWidth(Double.parseDouble(width));
 
-            UserDao.canvas.setHeight(Double.parseDouble(length));
-            UserDao.canvas.setWidth(Double.parseDouble(width));
+            Model.canvas.setHeight(Double.parseDouble(length));
+            Model.canvas.setWidth(Double.parseDouble(width));
 
-            if (UserDao.pane.getChildren().contains(UserDao.canvas)) {
-                UserDao.pane.getChildren().remove(UserDao.canvas);
+            if (Model.pane.getChildren().contains(Model.canvas)) {
+                Model.pane.getChildren().remove(Model.canvas);
             }
-            UserDao.pane.getChildren().add(UserDao.canvas);
-            UserDao.pane.setStyle("-fx-background-color: white");
+            Model.pane.getChildren().add(Model.canvas);
+            Model.pane.setStyle("-fx-background-color: white");
 
-            if (UserDao.canvasPane.getChildren().contains(UserDao.pane)) {
-                UserDao.canvasPane.getChildren().remove(UserDao.pane);
+            if (Model.canvasPane.getChildren().contains(Model.pane)) {
+                Model.canvasPane.getChildren().remove(Model.pane);
             }
-            UserDao.canvasPane.getChildren().add(UserDao.pane);
-            UserDao.canvasPane.setStyle("-fx-background-color: white");
+            Model.canvasPane.getChildren().add(Model.pane);
+            Model.canvasPane.setStyle("-fx-background-color: white");
         }
 
         Stage stage = (Stage) ok.getScene().getWindow();

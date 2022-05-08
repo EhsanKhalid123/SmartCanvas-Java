@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import dao.UserDao;
+import model.Model;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +30,7 @@ public class ProfileController {
 
     private Image initialImage;
     private Image image;
+    private Image image2;
     private String firstName;
     private String lastName;
 
@@ -40,15 +41,15 @@ public class ProfileController {
 
     @FXML
     public void getLoginDetail() {
-        for (int i = 0; i < UserDao.users.size(); i++) {
-            if (UserDao.users.get(i).getUsername().contains(UserDao.loggedUser.get(0))) {
-                profileUsername.setText(UserDao.users.get(i).getUsername());
-                profileFirstname.setText(UserDao.users.get(i).getFirstname());
-                profileLastName.setText(UserDao.users.get(i).getLastname());
-                initialImage = UserDao.users.get(i).getDp().getImage();
+        for (int i = 0; i < Model.users.size(); i++) {
+            if (Model.users.get(i).getUsername().contains(Model.loggedUser.get(0))) {
+                profileUsername.setText(Model.users.get(i).getUsername());
+                profileFirstname.setText(Model.users.get(i).getFirstname());
+                profileLastName.setText(Model.users.get(i).getLastname());
+                initialImage = Model.users.get(i).getDp();
                 profilePic.setImage(initialImage);
-                firstName = UserDao.users.get(i).getFirstname();
-                lastName = UserDao.users.get(i).getLastname();
+                firstName = Model.users.get(i).getFirstname();
+                lastName = Model.users.get(i).getLastname();
             }
         }
     }
@@ -62,15 +63,15 @@ public class ProfileController {
     @FXML
     void ok() throws IOException {
 
-        for (int i = 0; i < UserDao.users.size(); i++) {
+        for (int i = 0; i < Model.users.size(); i++) {
             if (!profileFirstname.getText().equals(firstName)) {
-                UserDao.users.get(i).setFirstname(profileFirstname.getText());
+                Model.users.get(i).setFirstname(profileFirstname.getText());
             }
             if (!profileLastName.getText().equals(lastName)) {
-                UserDao.users.get(i).setLastname(profileLastName.getText());
+                Model.users.get(i).setLastname(profileLastName.getText());
             }
             if (!profilePic.getImage().equals(initialImage)){
-                UserDao.users.get(i).setDp(profilePic);
+                Model.users.get(i).setDp(image);
             }
         }
 
@@ -99,10 +100,10 @@ public class ProfileController {
             } else {
                 image = new Image(file.toURI().toString());
                 profilePic.setImage(image);
-                for (int i = 0; i < UserDao.users.size(); i++) {
-                    if (UserDao.users.get(i).getUsername().contains((CharSequence) profileUsername)) {
+                for (int i = 0; i < Model.users.size(); i++) {
+                    if (Model.users.get(i).getUsername().contains((CharSequence) profileUsername)) {
                         if (!profilePic.getImage().equals(initialImage)) {
-                            UserDao.users.get(i).setDp(profilePic);
+                            Model.users.get(i).setDp(image);
                         }
                     }
                 }

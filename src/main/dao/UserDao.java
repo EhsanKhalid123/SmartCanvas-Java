@@ -1,21 +1,24 @@
 package dao;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
 import model.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
 
-public class UserDao {
-    public static List<User> users = new ArrayList<>();
-    public static List<String> loggedUser = new ArrayList<>();
-    public static Canvas canvas = new Canvas();
-    public static Pane canvasPane = new Pane();
-    public static Pane pane = new Pane();
+/**
+ * A data access object (DAO) is a pattern that provides an abstract interface
+ * to a database or other persistence mechanism.
+ * the DAO maps application calls to the persistence layer and provides some specific data operations
+ * without exposing details of the database.
+ */
+public interface UserDao {
+    void setup() throws SQLException;
 
-    public static List<User> getUsers(){
-         return users;
-    }
+    User getUser(String username, String password) throws SQLException;
+//    User getUser(String username, String password, String firstname, String lastname, Image dp) throws SQLException;
+    User getUser(String username, String password, String firstname, String lastname) throws SQLException;
 
+    User createUser(String username, String password, String firstname, String lastname, Image dp) throws SQLException, FileNotFoundException;
+//    User createUser(String username, String password, String firstname, String lastname) throws SQLException;
 }

@@ -1,6 +1,6 @@
 package model;
 
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 
 public class User {
 
@@ -8,10 +8,20 @@ public class User {
     private String password;
     private String firstname;
     private String lastname;
-    private ImageView dp;
+    private Image dp;
 
 
-    public User(String username, String password, String firstname, String lastname, ImageView dp) {
+    public User() {
+    }
+
+    public User(String username, String password, String firstname, String lastname) {
+        this.username = username;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
+    public User(String username, String password, String firstname, String lastname, Image dp) {
         this.username = username;
         this.password = password;
         this.firstname = firstname;
@@ -51,11 +61,11 @@ public class User {
         this.lastname = lastname;
     }
 
-    public ImageView getDp() {
+    public Image getDp() {
         return dp;
     }
 
-    public void setDp(ImageView dp) {
+    public void setDp(Image dp) {
         this.dp = dp;
     }
 

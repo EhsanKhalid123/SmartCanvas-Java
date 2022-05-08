@@ -11,10 +11,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model.User;
-import dao.UserDao;
+import model.Model;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
 
 public class RegisterController {
 
@@ -36,6 +38,8 @@ public class RegisterController {
     private TextField registerUsername;
     @FXML
     private Rectangle picRectangle;
+
+    private Image image;
 
     private final Color error = Color.web("#ff1c1c");
 
@@ -63,35 +67,56 @@ public class RegisterController {
                 // PASSWORD WILL BE HASHED HERE
             }
         } else if (registerDP.getImage() == null){
-            registerDP.setImage(new Image(getClass().getResourceAsStream("/views/defaultDP.png")));
+            image = new Image(getClass().getResourceAsStream("/views/defaultDP.png"));
+            registerDP.setImage(image);
+            picRectangle.setStrokeWidth(0);
+        } else if (registerDP.getImage() != null){
+            image = registerDP.getImage();
+            registerDP.setImage(image);
             picRectangle.setStrokeWidth(0);
         }
 
-        UserDao.users.add(new User(username, password, firstname, lastname, registerDP));
+//        Model.users.add(new User(username, password, firstname, lastname, image));
+//        confirmMessage.setTextFill(Color.GREEN);
+//        confirmMessage.setText("Created user " + username);
+        try {
+            Model model = new Model();
+            model.getUserDao().createUser(username, password, firstname, lastname, image);
+//            model.getUserDao().createUser(username, password, firstname, lastname);
+            confirmMessage.setTextFill(Color.GREEN);
+            confirmMessage.setText("Created user " + username);
+        } catch (SQLException | FileNotFoundException e) {
+            confirmMessage.setTextFill(Color.RED);
+            System.out.println(e.getMessage());
+            confirmMessage.setText("Error " + e.getMessage());
+        }
 
-        confirmMessage.setTextFill(Color.GREEN);
-        confirmMessage.setText("Created user " + username);
 
     }
 
     @FXML
     void profilePicture() {
         FileChooser fileChooser = new FileChooser();
-        File file;
+//        File file;
+
         Stage stage = new Stage();
         try {
-            file = fileChooser.showOpenDialog(stage);
+            Model.file = fileChooser.showOpenDialog(stage);
+            FileInputStream fileInputStream = new FileInputStream(Model.file);
             Image image;
-            if (file == null){
-                image = new Image(getClass().getResourceAsStream("/views/defaultDP.png"));
+            if (Model.file == null){
+                Model.file = new File("/views/defaultDP.png");
+                FileInputStream fileInputStream1 = new FileInputStream(Model.file);
+                image = new Image(fileInputStream1);
             } else {
-                image = new Image(file.toURI().toString());
+//                image = new Image(Model.file.toURI().toString());
+                image = new Image(fileInputStream);
             }
             picRectangle.setStrokeWidth(0);
             registerDP.setImage(image);
 
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
         }
 
 

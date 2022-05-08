@@ -18,7 +18,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 //import controller.Main;
-import dao.UserDao;
+import model.Model;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,15 +70,15 @@ public class SmartCanvasController {
     @FXML
     public void initialize() {
         getDetails();
-        borderPane.getChildren().add(UserDao.canvasPane);
+        borderPane.getChildren().add(Model.canvasPane);
     }
 
     public void getDetails(){
-        for (int i = 0; i < UserDao.users.size(); i++) {
-            if (UserDao.users.get(i).getUsername().contains(UserDao.loggedUser.get(0))) {
-                String username = UserDao.loggedUser.get(0);
+        for (int i = 0; i < Model.users.size(); i++) {
+            if (Model.users.get(i).getUsername().contains(Model.loggedUser.get(0))) {
+                String username = Model.loggedUser.get(0);
                 userName.setText(username);
-                image = UserDao.users.get(i).getDp().getImage();
+                image = Model.users.get(i).getDp();
                 dpImage.setImage(image);
             }
         }
@@ -86,9 +86,9 @@ public class SmartCanvasController {
 
     @FXML
     void logout() throws IOException {
-        UserDao.loggedUser.remove(0);
-        UserDao.pane.getChildren().remove(UserDao.canvas);
-        UserDao.canvasPane.getChildren().remove(UserDao.pane);
+        Model.loggedUser.remove(0);
+        Model.pane.getChildren().remove(Model.canvas);
+        Model.canvasPane.getChildren().remove(Model.pane);
         Main.setWindow("resources/views/Login", 481, 460, "Welcome to SmartCanvas!", false);
     }
 
@@ -108,18 +108,18 @@ public class SmartCanvasController {
     @FXML
     void addCanvas() throws IOException {
         Stage stage = new Stage();
-        Parent root2 = FXMLLoader.load(UserDao.class.getResource("/views/NewCanvas.fxml"));
+        Parent root2 = FXMLLoader.load(Model.class.getResource("/views/NewCanvas.fxml"));
         stage.setTitle("Create a new canvas");
         stage.setScene(new Scene(root2, 300, 145));
         stage.setResizable(false);
-        Image icon = new Image(UserDao.class.getResourceAsStream("/views/Whiteboard-512.png"));
+        Image icon = new Image(Model.class.getResourceAsStream("/views/Whiteboard-512.png"));
         stage.getIcons().add(icon);
         stage.show();
 
-        if (borderPane.getChildren().contains(UserDao.canvasPane)){
-            borderPane.getChildren().remove(UserDao.canvasPane);
+        if (borderPane.getChildren().contains(Model.canvasPane)){
+            borderPane.getChildren().remove(Model.canvasPane);
         }
-        borderPane.getChildren().add(UserDao.canvasPane);
+        borderPane.getChildren().add(Model.canvasPane);
 
     }
 
@@ -136,9 +136,9 @@ public class SmartCanvasController {
             borderPane.setScaleZ(newValue.intValue());
             borderPane.setTranslateZ((Double) newValue);
             borderPane.getTranslateZ();
-            UserDao.canvas.setScaleZ(newValue.intValue());
+            Model.canvas.setScaleZ(newValue.intValue());
             System.out.println(newValue.intValue());
-            UserDao.canvas.setTranslateZ(newValue.intValue());
+            Model.canvas.setTranslateZ(newValue.intValue());
 
         });
 
@@ -165,7 +165,7 @@ public class SmartCanvasController {
 
     @FXML
     void addRectangle() {
-        GraphicsContext gc = UserDao.canvas.getGraphicsContext2D();
+        GraphicsContext gc = Model.canvas.getGraphicsContext2D();
         gc.setFill(Color.valueOf("#ff0000"));
         gc.fillRect(100, 100, 200, 200);
 

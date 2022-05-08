@@ -8,9 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import dao.UserDao;
+import model.Model;
+import model.User;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class LoginController {
 
@@ -27,8 +29,10 @@ public class LoginController {
     @FXML
     private Label message;
 
+    private Model model;
+
     @FXML
-    public void login() throws IOException {
+    public void login() throws IOException, SQLException {
 
         String username = loginUsername.getText();
         String password = loginPassword.getText();
@@ -39,13 +43,23 @@ public class LoginController {
             message.setText("Please Enter Password");
         }
         else {
-            for (int i = 0; i < UserDao.users.size(); i++) {
-                if (UserDao.users.get(i).getUsername().contains(username) && UserDao.users.get(i).getPassword().contains(password)) {
-                    UserDao.loggedUser.add(username);
-                    Main.setWindow("resources/views/SmartCanvas", 900, 610, "SmartCanvas", true);
-                }
+            model = new Model();
+            User user;
+            user = model.getUserDao().getUser(username, password);
+            if (user != null){
+                model.setCurrentUser(user);
+                Model.loggedUser.add(username);
+                Main.setWindow("resources/views/SmartCanvas", 900, 610, "SmartCanvas", true);
+            } else {
+                message.setText("Username and Password doesn't exist!");
             }
-            message.setText("Username and Password doesn't exist!");
+//            for (int i = 0; i < Model.users.size(); i++) {
+//                if (Model.users.get(i).getUsername().contains(username) && Model.users.get(i).getPassword().contains(password)) {
+//                    Model.loggedUser.add(username);
+//                    Main.setWindow("resources/views/SmartCanvas", 900, 610, "SmartCanvas", true);
+//                }
+//            }
+//            message.setText("Username and Password doesn't exist!");
         }
     }
 
