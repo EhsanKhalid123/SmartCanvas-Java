@@ -85,13 +85,14 @@ public class UserDaoImpl implements UserDao {
             stmt.setString(2, password);
             stmt.setString(3, firstname);
             stmt.setString(4, lastname);
-//            stmt.setBlob(5, (Blob) dp);
-            FileInputStream fileInputStream = new FileInputStream(Model.file);
-            stmt.setBinaryStream(5, fileInputStream, (int) Model.file.length());
-
+//            if (Model.file == null){
+//                stmt.setBinaryStream(5, Model.inputStream);
+//            } else {
+                FileInputStream fileInputStream = new FileInputStream(Model.file);
+                stmt.setBinaryStream(5, fileInputStream, (int) Model.file.length());
+//            }
             stmt.executeUpdate();
             return new User(username, password, firstname, lastname, dp);
-//            return new User(username, password, firstname, lastname);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return new User(username, password, firstname, lastname, dp);

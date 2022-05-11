@@ -1,12 +1,12 @@
 # Compiled class file
 *.class
-*.idea
-*/out
-*/openjfx-17.0.2_windows-x64_bin-sdk
+
+# Directories
+.idea
 /out
 /openjfx-17.0.2_windows-x64_bin-sdk
-out
-openjfx-17.0.2_windows-x64_bin-sdk
+.DS_Store
+A2 - Smart Canvas - Ehsan Khalid (s3838975).iml
 
 # Log file
 *.log

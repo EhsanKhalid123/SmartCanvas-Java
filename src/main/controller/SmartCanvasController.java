@@ -133,12 +133,14 @@ public class SmartCanvasController {
         zoomPercentage.setText("0%");
         zoomSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> {
             zoomPercentage.setText(newValue.intValue() + "%");
-            borderPane.setScaleZ(newValue.intValue());
-            borderPane.setTranslateZ((Double) newValue);
-            borderPane.getTranslateZ();
-            Model.canvas.setScaleZ(newValue.intValue());
-            System.out.println(newValue.intValue());
-            Model.canvas.setTranslateZ(newValue.intValue());
+//            borderPane.setScaleX(newValue.intValue());
+//            borderPane.setScaleY(newValue.intValue());
+            borderPane.setTranslateX((Double) newValue);
+            borderPane.setTranslateY((Double) newValue);
+//            borderPane.getTranslateZ();
+//            Model.canvas.setScaleZ(newValue.intValue());
+//            System.out.println(newValue.intValue());
+//            Model.canvas.setTranslateY(newValue.intValue());
 
         });
 

@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 public class Model {
 
     public static File file;
+    public static InputStream inputStream;
     public static List<User> users = new ArrayList<>();
     public static List<String> loggedUser = new ArrayList<>();
     public static Canvas canvas = new Canvas();

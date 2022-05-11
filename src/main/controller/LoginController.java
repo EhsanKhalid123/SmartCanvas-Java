@@ -53,13 +53,6 @@ public class LoginController {
             } else {
                 message.setText("Username and Password doesn't exist!");
             }
-//            for (int i = 0; i < Model.users.size(); i++) {
-//                if (Model.users.get(i).getUsername().contains(username) && Model.users.get(i).getPassword().contains(password)) {
-//                    Model.loggedUser.add(username);
-//                    Main.setWindow("resources/views/SmartCanvas", 900, 610, "SmartCanvas", true);
-//                }
-//            }
-//            message.setText("Username and Password doesn't exist!");
         }
     }
 

@@ -16,6 +16,9 @@ import model.Model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.SQLException;
 
 public class RegisterController {
@@ -44,7 +47,7 @@ public class RegisterController {
     private final Color error = Color.web("#ff1c1c");
 
     @FXML
-    public void registerUser() {
+    public void registerUser() throws IOException, URISyntaxException {
         confirmMessage.setTextFill(error);
         String username = registerUsername.getText();
         String password = registerPassword.getText();
@@ -62,67 +65,62 @@ public class RegisterController {
             return;
         } else if (password == null || password.isEmpty()) {
             confirmMessage.setText("Please enter a password!");
-            if (password != null || !password.isEmpty()){
+            if (password != null || !password.isEmpty()) {
                 //Todo
                 // PASSWORD WILL BE HASHED HERE
             }
-        } else if (registerDP.getImage() == null){
-            image = new Image(getClass().getResourceAsStream("/views/defaultDP.png"));
+        } else if (registerDP.getImage() == null) {
+            URL defaultImage = getClass().getResource("/views/defaultDP.png");
+            Model.file = new File(defaultImage.toURI());
+            FileInputStream fileInputStream = new FileInputStream(Model.file);
+            image = new Image(fileInputStream);
             registerDP.setImage(image);
             picRectangle.setStrokeWidth(0);
-        } else if (registerDP.getImage() != null){
+        } else if (registerDP.getImage() != null) {
             image = registerDP.getImage();
             registerDP.setImage(image);
             picRectangle.setStrokeWidth(0);
         }
 
-//        Model.users.add(new User(username, password, firstname, lastname, image));
-//        confirmMessage.setTextFill(Color.GREEN);
-//        confirmMessage.setText("Created user " + username);
         try {
             Model model = new Model();
+            if (model.getUserDao().getUser(username, password) != null){
+                confirmMessage.setTextFill(Color.RED);
+                confirmMessage.setText("Username already Exists");
+                return;
+            }
             model.getUserDao().createUser(username, password, firstname, lastname, image);
-//            model.getUserDao().createUser(username, password, firstname, lastname);
             confirmMessage.setTextFill(Color.GREEN);
             confirmMessage.setText("Created user " + username);
         } catch (SQLException | FileNotFoundException e) {
             confirmMessage.setTextFill(Color.RED);
+            confirmMessage.setText("Error creating User");
             System.out.println(e.getMessage());
-            confirmMessage.setText("Error " + e.getMessage());
+
         }
-
-
     }
 
     @FXML
     void profilePicture() {
-        FileChooser fileChooser = new FileChooser();
-//        File file;
 
+        FileChooser fileChooser = new FileChooser();
+        Image image;
         Stage stage = new Stage();
+        Model.file = fileChooser.showOpenDialog(stage);
+
         try {
-            Model.file = fileChooser.showOpenDialog(stage);
-            FileInputStream fileInputStream = new FileInputStream(Model.file);
-            Image image;
-            if (Model.file == null){
-                Model.file = new File("/views/defaultDP.png");
-                FileInputStream fileInputStream1 = new FileInputStream(Model.file);
-                image = new Image(fileInputStream1);
+            if (Model.file == null) {
+                image = new Image(getClass().getResourceAsStream("/views/defaultDP.png"));
             } else {
-//                image = new Image(Model.file.toURI().toString());
+                FileInputStream fileInputStream = new FileInputStream(Model.file);
                 image = new Image(fileInputStream);
             }
             picRectangle.setStrokeWidth(0);
             registerDP.setImage(image);
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
-
-
     }
-
 
     public void close() {
         Stage stage = (Stage) registerClose.getScene().getWindow();
