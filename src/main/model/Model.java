@@ -21,10 +21,8 @@ public class Model {
     public static Canvas canvas = new Canvas();
     public static Pane canvasPane = new Pane();
     public static Pane pane = new Pane();
-
-    public static List<User> getUsers(){
-        return users;
-    }
+    private UserDao userDao;
+    private User currentUser;
 
     public static String hashPassword(String password) throws NoSuchAlgorithmException {
         // Static getInstance method is called with hashing MD5
@@ -42,13 +40,8 @@ public class Model {
         while (hashtext.length() < 32) {
             hashtext = "0" + hashtext;
         }
-
         return hashtext;
     }
-
-
-    private UserDao userDao;
-    private User currentUser;
 
     public Model() {
         userDao = new UserDaoImpl();

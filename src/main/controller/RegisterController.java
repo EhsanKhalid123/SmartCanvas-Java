@@ -26,8 +26,6 @@ public class RegisterController {
     @FXML
     public Label confirmMessage;
     @FXML
-    private Button createUser;
-    @FXML
     private Button registerClose;
     @FXML
     private ImageView registerDP;

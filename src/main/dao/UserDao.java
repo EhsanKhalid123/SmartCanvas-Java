@@ -16,9 +16,10 @@ public interface UserDao {
     void setup() throws SQLException;
 
     User getUser(String username) throws SQLException;
-    User getUser(String username, String password) throws SQLException;
-//    User getUser(String username, String password, String firstname, String lastname, Image dp) throws SQLException;
 
-    User createUser(String username, String password, String firstname, String lastname, Image dp) throws SQLException, FileNotFoundException;
+    User getUser(String username, String password) throws SQLException;
+
+    User createUser(String username, String password, String firstname, String lastname, Image dp)
+            throws SQLException, FileNotFoundException;
 
 }

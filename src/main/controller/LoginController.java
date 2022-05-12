@@ -18,13 +18,7 @@ import java.sql.SQLException;
 public class LoginController {
 
     @FXML
-    private Button loginClose;
-    @FXML
-    private Hyperlink loginNewUser;
-    @FXML
     private PasswordField loginPassword;
-    @FXML
-    private Button loginSignin;
     @FXML
     private TextField loginUsername;
     @FXML

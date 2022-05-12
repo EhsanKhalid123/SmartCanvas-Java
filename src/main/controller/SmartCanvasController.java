@@ -67,7 +67,6 @@ public class SmartCanvasController {
 
     private Model model;
     private Image image;
-//    private static Image image1 = image;
 
     @FXML
     public void initialize() throws SQLException {
@@ -118,7 +117,7 @@ public class SmartCanvasController {
         stage.getIcons().add(icon);
         stage.show();
 
-        if (borderPane.getChildren().contains(Model.canvasPane)){
+        if (borderPane.getChildren().contains(Model.canvasPane)) {
             borderPane.getChildren().remove(Model.canvasPane);
         }
         borderPane.getChildren().add(Model.canvasPane);
@@ -131,7 +130,7 @@ public class SmartCanvasController {
     }
 
     @FXML
-    void zoom(){
+    void zoom() {
         zoomPercentage.setText("0%");
         zoomSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> {
             zoomPercentage.setText(newValue.intValue() + "%");

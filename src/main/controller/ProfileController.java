@@ -12,7 +12,6 @@ import model.Model;
 import model.User;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class ProfileController {
@@ -32,7 +31,6 @@ public class ProfileController {
 
     private Image initialImage;
     private Image image;
-    private Image image2;
     private String firstName;
     private String lastName;
     private Model model;
@@ -65,7 +63,7 @@ public class ProfileController {
     }
 
     @FXML
-    void ok() throws IOException {
+    void ok() {
 
         for (int i = 0; i < Model.users.size(); i++) {
             if (!profileFirstname.getText().equals(firstName)) {
@@ -74,7 +72,7 @@ public class ProfileController {
             if (!profileLastName.getText().equals(lastName)) {
                 Model.users.get(i).setLastname(profileLastName.getText());
             }
-            if (!profilePic.getImage().equals(initialImage)){
+            if (!profilePic.getImage().equals(initialImage)) {
                 Model.users.get(i).setDp(image);
             }
         }
@@ -83,7 +81,6 @@ public class ProfileController {
         stage.close();
 
     }
-
 
     @FXML
     void profilePicture() {
