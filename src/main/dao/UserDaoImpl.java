@@ -6,6 +6,7 @@ import model.User;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 public class UserDaoImpl implements UserDao {
@@ -19,21 +20,36 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = Database.getConnection();
              Statement stmt = connection.createStatement()) {
             String sql = "CREATE TABLE IF Not EXISTS " + TABLE_NAME + " (username VARCHAR(10) Not NULL,"
-                    + "password VARCHAR(8) Not NULL," + "firstname VARCHAR(10) Not NULL," + "lastname VARCHAR(10) Not NULL," + "image LONGBLOB," + "PRIMARY KEY (username))";
+                    + "hashedPassword VARCHAR(255) Not NULL," + "firstname VARCHAR(10) Not NULL," + "lastname VARCHAR(10) Not NULL," + "image LONGBLOB," + "PRIMARY KEY (username))";
             stmt.executeUpdate(sql);
+        }
+    }
 
+    @Override
+    public User getUser(String username) throws SQLException {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ?";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
 
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User();
+                    user.setUsername(rs.getString("username"));
+                    return user;
+                }
+                return null;
+            }
         }
     }
 
     @Override
     public User getUser(String username, String password) throws SQLException {
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ?";
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND hashedPassword = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setString(2, password);
-
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -48,7 +64,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getUser(String username, String password, String firstname, String lastname) throws SQLException {
+    public User getUser(String username, String password, String firstname, String lastname, Image dp) throws SQLException {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ? AND firstname = ? AND lastname = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -77,23 +93,21 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User createUser(String username, String password, String firstname, String lastname, Image dp) throws FileNotFoundException {
+    public User createUser(String username, String password, String firstname, String lastname, Image dp) {
         String sql = "INSERT INTO " + TABLE_NAME + " VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
-            stmt.setString(2, password);
+            String hashedPassword = Model.hashPassword(password);
+            stmt.setString(2, hashedPassword);
             stmt.setString(3, firstname);
             stmt.setString(4, lastname);
-//            if (Model.file == null){
-//                stmt.setBinaryStream(5, Model.inputStream);
-//            } else {
-                FileInputStream fileInputStream = new FileInputStream(Model.file);
-                stmt.setBinaryStream(5, fileInputStream, (int) Model.file.length());
-//            }
+            FileInputStream fileInputStream = new FileInputStream(Model.file);
+            stmt.setBinaryStream(5, fileInputStream, (int) Model.file.length());
+
             stmt.executeUpdate();
             return new User(username, password, firstname, lastname, dp);
-        } catch (SQLException e) {
+        } catch (SQLException | FileNotFoundException | NoSuchAlgorithmException e) {
             System.out.println(e.getMessage());
             return new User(username, password, firstname, lastname, dp);
         }

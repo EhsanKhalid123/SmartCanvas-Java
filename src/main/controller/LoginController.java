@@ -12,6 +12,7 @@ import model.Model;
 import model.User;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 public class LoginController {
@@ -32,7 +33,7 @@ public class LoginController {
     private Model model;
 
     @FXML
-    public void login() throws IOException, SQLException {
+    public void login() throws IOException, SQLException, NoSuchAlgorithmException {
 
         String username = loginUsername.getText();
         String password = loginPassword.getText();
@@ -45,10 +46,11 @@ public class LoginController {
         else {
             model = new Model();
             User user;
-            user = model.getUserDao().getUser(username, password);
+            String hashedPassword = Model.hashPassword(password);
+            user = model.getUserDao().getUser(username, hashedPassword);
             if (user != null){
                 model.setCurrentUser(user);
-                Model.loggedUser.add(username);
+//                Model.loggedUser.add(username);
                 Main.setWindow("resources/views/SmartCanvas", 900, 610, "SmartCanvas", true);
             } else {
                 message.setText("Username and Password doesn't exist!");

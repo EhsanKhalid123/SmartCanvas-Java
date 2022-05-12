@@ -65,10 +65,6 @@ public class RegisterController {
             return;
         } else if (password == null || password.isEmpty()) {
             confirmMessage.setText("Please enter a password!");
-            if (password != null || !password.isEmpty()) {
-                //Todo
-                // PASSWORD WILL BE HASHED HERE
-            }
         } else if (registerDP.getImage() == null) {
             URL defaultImage = getClass().getResource("/views/defaultDP.png");
             Model.file = new File(defaultImage.toURI());
@@ -84,7 +80,7 @@ public class RegisterController {
 
         try {
             Model model = new Model();
-            if (model.getUserDao().getUser(username, password) != null){
+            if (model.getUserDao().getUser(username) != null){
                 confirmMessage.setTextFill(Color.RED);
                 confirmMessage.setText("Username already Exists");
                 return;
@@ -96,7 +92,6 @@ public class RegisterController {
             confirmMessage.setTextFill(Color.RED);
             confirmMessage.setText("Error creating User");
             System.out.println(e.getMessage());
-
         }
     }
 
