@@ -6,6 +6,7 @@ import model.User;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
@@ -36,6 +37,13 @@ public class UserDaoImpl implements UserDao {
                 if (rs.next()) {
                     User user = new User();
                     user.setUsername(rs.getString("username"));
+                    user.setPassword(rs.getString("hashedPassword"));
+                    user.setFirstname(rs.getString("firstname"));
+                    user.setLastname(rs.getString("lastname"));
+                    Blob blob = rs.getBlob("image");
+                    InputStream inputStream = blob.getBinaryStream();
+                    Image image = new Image(inputStream);
+                    user.setDp(image);
                     return user;
                 }
                 return null;
@@ -55,7 +63,7 @@ public class UserDaoImpl implements UserDao {
                 if (rs.next()) {
                     User user = new User();
                     user.setUsername(rs.getString("username"));
-                    user.setPassword(rs.getString("password"));
+                    user.setPassword(rs.getString("hashedPassword"));
                     return user;
                 }
                 return null;
@@ -63,34 +71,34 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @Override
-    public User getUser(String username, String password, String firstname, String lastname, Image dp) throws SQLException {
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ? AND firstname = ? AND lastname = ?";
-        try (Connection connection = Database.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setString(3, firstname);
-            stmt.setString(4, lastname);
+//    @Override
+//    public User getUser(String username, String password, String firstname, String lastname, Image dp) throws SQLException {
+//        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ? AND firstname = ? AND lastname = ? AND image = ?";
+//        try (Connection connection = Database.getConnection();
+//             PreparedStatement stmt = connection.prepareStatement(sql)) {
+//            stmt.setString(1, username);
+//            stmt.setString(2, password);
+//            stmt.setString(3, firstname);
+//            stmt.setString(4, lastname);
 //            stmt.setBlob(5, (Blob) dp);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    User user = new User();
-                    user.setUsername(rs.getString("username"));
-                    user.setPassword(rs.getString("password"));
-                    user.setFirstname(rs.getString("firstname"));
-                    user.setLastname(rs.getString("lastname"));
-//                    Blob blob = rs.getBlob(String.valueOf(dp));
+//
+//            try (ResultSet rs = stmt.executeQuery()) {
+//                if (rs.next()) {
+//                    User user = new User();
+//                    user.setUsername(rs.getString("username"));
+//                    user.setPassword(rs.getString("password"));
+//                    user.setFirstname(rs.getString("firstname"));
+//                    user.setLastname(rs.getString("lastname"));
+//                    Blob blob = rs.getBlob("image");
 //                    InputStream inputStream = blob.getBinaryStream();
 //                    Image image = new Image(inputStream);
 //                    user.setDp(image);
-                    return user;
-                }
-                return null;
-            }
-        }
-    }
+//                    return user;
+//                }
+//                return null;
+//            }
+//        }
+//    }
 
     @Override
     public User createUser(String username, String password, String firstname, String lastname, Image dp) {

@@ -37,6 +37,7 @@ public class LoginController {
 
         String username = loginUsername.getText();
         String password = loginPassword.getText();
+        String hashedPassword = Model.hashPassword(password);
 
         if (username.isBlank()) {
             message.setText("Please Enter Username");
@@ -46,11 +47,10 @@ public class LoginController {
         else {
             model = new Model();
             User user;
-            String hashedPassword = Model.hashPassword(password);
             user = model.getUserDao().getUser(username, hashedPassword);
             if (user != null){
                 model.setCurrentUser(user);
-//                Model.loggedUser.add(username);
+                Model.loggedUser = user.getUsername();
                 Main.setWindow("resources/views/SmartCanvas", 900, 610, "SmartCanvas", true);
             } else {
                 message.setText("Username and Password doesn't exist!");

@@ -17,11 +17,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-//import controller.Main;
 import model.Model;
+import model.User;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class SmartCanvasController {
 
@@ -64,29 +65,30 @@ public class SmartCanvasController {
     @FXML
     private Pane borderPane;
 
+    private Model model;
     private Image image;
 //    private static Image image1 = image;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         getDetails();
         borderPane.getChildren().add(Model.canvasPane);
     }
 
-    public void getDetails(){
-        for (int i = 0; i < Model.users.size(); i++) {
-            if (Model.users.get(i).getUsername().contains(Model.loggedUser.get(0))) {
-                String username = Model.loggedUser.get(0);
-                userName.setText(username);
-                image = Model.users.get(i).getDp();
-                dpImage.setImage(image);
-            }
-        }
+    public void getDetails() throws SQLException {
+
+        model = new Model();
+        User user;
+        user = model.getUserDao().getUser(Model.loggedUser);
+        userName.setText(user.getFirstname() + " " + user.getLastname());
+        image = user.getDp();
+        dpImage.setImage(image);
+
     }
 
     @FXML
     void logout() throws IOException {
-        Model.loggedUser.remove(0);
+        Model.loggedUser = "";
         Model.pane.getChildren().remove(Model.canvas);
         Model.canvasPane.getChildren().remove(Model.pane);
         Main.setWindow("resources/views/Login", 481, 460, "Welcome to SmartCanvas!", false);

@@ -6,7 +6,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,9 +16,8 @@ import java.util.List;
 public class Model {
 
     public static File file;
-    public static InputStream inputStream;
     public static List<User> users = new ArrayList<>();
-    public static List<String> loggedUser = new ArrayList<>();
+    public static String loggedUser = new String();
     public static Canvas canvas = new Canvas();
     public static Pane canvasPane = new Pane();
     public static Pane pane = new Pane();

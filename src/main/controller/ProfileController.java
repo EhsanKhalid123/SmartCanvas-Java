@@ -9,9 +9,11 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Model;
+import model.User;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ProfileController {
 
@@ -33,25 +35,27 @@ public class ProfileController {
     private Image image2;
     private String firstName;
     private String lastName;
+    private Model model;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws SQLException {
         getLoginDetail();
     }
 
     @FXML
-    public void getLoginDetail() {
-        for (int i = 0; i < Model.users.size(); i++) {
-            if (Model.users.get(i).getUsername().contains(Model.loggedUser.get(0))) {
-                profileUsername.setText(Model.users.get(i).getUsername());
-                profileFirstname.setText(Model.users.get(i).getFirstname());
-                profileLastName.setText(Model.users.get(i).getLastname());
-                initialImage = Model.users.get(i).getDp();
-                profilePic.setImage(initialImage);
-                firstName = Model.users.get(i).getFirstname();
-                lastName = Model.users.get(i).getLastname();
-            }
-        }
+    public void getLoginDetail() throws SQLException {
+
+        model = new Model();
+        User user;
+        user = model.getUserDao().getUser(Model.loggedUser);
+        profileUsername.setText(user.getUsername());
+        profileFirstname.setText(user.getFirstname());
+        profileLastName.setText(user.getLastname());
+        initialImage = user.getDp();
+        profilePic.setImage(initialImage);
+        firstName = user.getFirstname();
+        lastName = user.getLastname();
+
     }
 
     @FXML
@@ -75,15 +79,8 @@ public class ProfileController {
             }
         }
 
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("SmartCanvas.fxml"));
-//        controller.Main.openFXML("SmartCanvas");
-//        loader.load();
-//        SmartCanvasController smc = loader.getController();
-//        smc.getDetails();
-
         Stage stage = (Stage) ok.getScene().getWindow();
         stage.close();
-
 
     }
 
