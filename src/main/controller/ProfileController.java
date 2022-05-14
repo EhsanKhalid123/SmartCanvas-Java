@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import model.Model;
 import model.User;
 
-import java.io.File;
 import java.sql.SQLException;
 
 public class ProfileController {
@@ -28,12 +27,15 @@ public class ProfileController {
     private Label profileUsername;
     @FXML
     private Button ok;
+    @FXML
+    private Label message;
 
     private Image initialImage;
     private Image image;
     private String firstName;
     private String lastName;
     private Model model;
+    private User user;
 
     @FXML
     public void initialize() throws SQLException {
@@ -44,7 +46,6 @@ public class ProfileController {
     public void getLoginDetail() throws SQLException {
 
         model = new Model();
-        User user;
         user = model.getUserDao().getUser(Model.loggedUser);
         profileUsername.setText(user.getUsername());
         profileFirstname.setText(user.getFirstname());
@@ -63,18 +64,27 @@ public class ProfileController {
     }
 
     @FXML
-    void ok() {
+    void ok() throws SQLException {
 
-        for (int i = 0; i < Model.users.size(); i++) {
-            if (!profileFirstname.getText().equals(firstName)) {
-                Model.users.get(i).setFirstname(profileFirstname.getText());
-            }
-            if (!profileLastName.getText().equals(lastName)) {
-                Model.users.get(i).setLastname(profileLastName.getText());
-            }
-            if (!profilePic.getImage().equals(initialImage)) {
-                Model.users.get(i).setDp(image);
-            }
+        if (profileFirstname.getText().isBlank()) {
+            message.setText("Firstname is empty!");
+            return;
+        }
+        if (profileLastName.getText().isBlank()) {
+            message.setText("Lastname is empty!");
+            return;
+        }
+
+        if (!profileFirstname.getText().equals(user.getFirstname())) {
+            User user = model.getUserDao().getUser(Model.loggedUser);
+            model.getUserDao().updateUser(profileFirstname.getText(), user.getLastname(), user.getUsername());
+        }
+        if (!profileLastName.getText().equals(user.getLastname())) {
+            User user = model.getUserDao().getUser(Model.loggedUser);
+            model.getUserDao().updateUser(user.getFirstname(), profileLastName.getText(), user.getUsername());
+        }
+        if (!profilePic.getImage().equals(user.getDp())) {
+            model.getUserDao().updateUser(user.getUsername(), profilePic.getImage());
         }
 
         Stage stage = (Stage) ok.getScene().getWindow();
@@ -86,25 +96,15 @@ public class ProfileController {
     void profilePicture() {
         FileChooser fileChooser = new FileChooser();
         Stage stage = new Stage();
-        File file;
-        try {
-            file = fileChooser.showOpenDialog(stage);
-            if (file == null) {
-                profilePic.setImage(initialImage);
-            } else {
-                image = new Image(file.toURI().toString());
-                profilePic.setImage(image);
-                for (int i = 0; i < Model.users.size(); i++) {
-                    if (Model.users.get(i).getUsername().contains((CharSequence) profileUsername)) {
-                        if (!profilePic.getImage().equals(initialImage)) {
-                            Model.users.get(i).setDp(image);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
 
+        model.file = fileChooser.showOpenDialog(stage);
+        if (model.file == null) {
+            profilePic.setImage(initialImage);
+        } else {
+            image = new Image(model.file.toURI().toString());
+            profilePic.setImage(image);
         }
+
     }
 
 }

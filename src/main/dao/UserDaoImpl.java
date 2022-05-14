@@ -4,9 +4,13 @@ import javafx.scene.image.Image;
 import model.Model;
 import model.User;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
@@ -23,6 +27,55 @@ public class UserDaoImpl implements UserDao {
             String sql = "CREATE TABLE IF Not EXISTS " + TABLE_NAME + " (username VARCHAR(10) Not NULL,"
                     + "hashedPassword VARCHAR(255) Not NULL," + "firstname VARCHAR(10) Not NULL," + "lastname VARCHAR(10) Not NULL," + "image LONGBLOB," + "PRIMARY KEY (username))";
             stmt.executeUpdate(sql);
+        }
+    }
+
+    @Override
+    public void updateUser(String firstname, String lastname, String username) {
+
+//        Note to self
+//        Use below syntax when updating direct from parameters passed in
+//        String sql = "UPDATE " + TABLE_NAME + " SET firstname = '"+firstname+"', lastname = '"+lastname+"'" + " WHERE username = '"+username+"'";
+//        stmt.executeUpdate(sql); <- use this when no stmt.setString stuff is set below the PreparedStatement Line
+
+        String sql = "UPDATE " + TABLE_NAME
+                + " SET firstname = ?, lastname = ?"
+                + "WHERE username = ?";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, firstname);
+            stmt.setString(2, lastname);
+            stmt.setString(3, username);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateUser(String username, Image dp) {
+
+        String sql = "UPDATE " + TABLE_NAME
+                + " SET image = ?"
+                + "WHERE username = ?";
+        try (Connection connection = Database.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            if (dp != null) {
+                URL url = new URL(dp.getUrl());
+                File file = new File(url.toURI());
+                FileInputStream fileInputStream = new FileInputStream(file);
+                stmt.setBinaryStream(1, fileInputStream);
+            }
+            stmt.setString(2, username);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException | FileNotFoundException | MalformedURLException | URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 

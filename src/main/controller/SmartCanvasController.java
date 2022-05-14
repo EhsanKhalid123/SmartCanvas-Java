@@ -98,7 +98,7 @@ public class SmartCanvasController {
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("/views/Profile.fxml"));
         stage.setTitle("Edit profile");
-        stage.setScene(new Scene(root, 430, 247));
+        stage.setScene(new Scene(root, 430, 268));
         stage.setResizable(false);
         Image icon = new Image(getClass().getResourceAsStream("/views/Whiteboard-512.png"));
         stage.getIcons().add(icon);

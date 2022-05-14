@@ -3,7 +3,6 @@ package dao;
 import javafx.scene.image.Image;
 import model.User;
 
-import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 /**
@@ -19,7 +18,9 @@ public interface UserDao {
 
     User getUser(String username, String password) throws SQLException;
 
-    User createUser(String username, String password, String firstname, String lastname, Image dp)
-            throws SQLException, FileNotFoundException;
+    void updateUser(String firstname, String lastname, String username);
+    void updateUser(String username, Image dp);
+
+    User createUser(String username, String password, String firstname, String lastname, Image dp);
 
 }

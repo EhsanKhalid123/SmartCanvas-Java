@@ -15,7 +15,6 @@ import model.Model;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -86,7 +85,7 @@ public class RegisterController {
             model.getUserDao().createUser(username, password, firstname, lastname, image);
             confirmMessage.setTextFill(Color.GREEN);
             confirmMessage.setText("Created user " + username);
-        } catch (SQLException | FileNotFoundException e) {
+        } catch (SQLException e) {
             confirmMessage.setTextFill(Color.RED);
             confirmMessage.setText("Error creating User");
             System.out.println(e.getMessage());
