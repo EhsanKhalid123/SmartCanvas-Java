@@ -77,7 +77,7 @@ public class RegisterController {
 
         try {
             Model model = new Model();
-            if (model.getUserDao().getUser(username) != null){
+            if (model.getUserDao().getUser(username) != null) {
                 confirmMessage.setTextFill(Color.RED);
                 confirmMessage.setText("Username already Exists");
                 return;

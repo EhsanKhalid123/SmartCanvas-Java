@@ -107,6 +107,18 @@ public class SmartCanvasController {
     }
 
     @FXML
+    void aboutMenu() throws IOException {
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("/views/About.fxml"));
+        stage.setTitle("About | Smart Canvas");
+        stage.setScene(new Scene(root, 430, 299));
+        stage.setResizable(false);
+        Image icon = new Image(getClass().getResourceAsStream("/views/Whiteboard-512.png"));
+        stage.getIcons().add(icon);
+        stage.show();
+    }
+
+    @FXML
     void addCanvas() throws IOException {
         Stage stage = new Stage();
         Parent root2 = FXMLLoader.load(Model.class.getResource("/views/NewCanvas.fxml"));

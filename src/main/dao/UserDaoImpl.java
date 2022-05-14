@@ -25,7 +25,8 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = Database.getConnection();
              Statement stmt = connection.createStatement()) {
             String sql = "CREATE TABLE IF Not EXISTS " + TABLE_NAME + " (username VARCHAR(10) Not NULL,"
-                    + "hashedPassword VARCHAR(255) Not NULL," + "firstname VARCHAR(10) Not NULL," + "lastname VARCHAR(10) Not NULL," + "image LONGBLOB," + "PRIMARY KEY (username))";
+                    + "hashedPassword VARCHAR(255) Not NULL," + "firstname VARCHAR(10) Not NULL," +
+                    "lastname VARCHAR(10) Not NULL," + "image LONGBLOB," + "PRIMARY KEY (username))";
             stmt.executeUpdate(sql);
         }
     }
@@ -33,14 +34,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void updateUser(String firstname, String lastname, String username) {
 
-//        Note to self
-//        Use below syntax when updating direct from parameters passed in
-//        String sql = "UPDATE " + TABLE_NAME + " SET firstname = '"+firstname+"', lastname = '"+lastname+"'" + " WHERE username = '"+username+"'";
-//        stmt.executeUpdate(sql); <- use this when no stmt.setString stuff is set below the PreparedStatement Line
-
-        String sql = "UPDATE " + TABLE_NAME
-                + " SET firstname = ?, lastname = ?"
-                + "WHERE username = ?";
+        String sql = "UPDATE " + TABLE_NAME + " SET firstname = ?, lastname = ?" + "WHERE username = ?";
         try (Connection connection = Database.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 

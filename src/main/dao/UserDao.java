@@ -12,6 +12,7 @@ import java.sql.SQLException;
  * without exposing details of the database.
  */
 public interface UserDao {
+    
     void setup() throws SQLException;
 
     User getUser(String username) throws SQLException;
@@ -19,6 +20,7 @@ public interface UserDao {
     User getUser(String username, String password) throws SQLException;
 
     void updateUser(String firstname, String lastname, String username);
+
     void updateUser(String username, Image dp);
 
     User createUser(String username, String password, String firstname, String lastname, Image dp);

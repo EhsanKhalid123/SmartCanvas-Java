@@ -131,7 +131,7 @@
                       </Menu>
                       <Menu mnemonicParsing="false" text="Help">
                         <items>
-                          <MenuItem fx:id="aboutMenu" mnemonicParsing="false" text="About" />
+                          <MenuItem fx:id="aboutMenu" mnemonicParsing="false" onAction="#aboutMenu" text="About" />
                         </items>
                       </Menu>
                     </menus>

@@ -37,12 +37,11 @@ public class LoginController {
             message.setText("Please Enter Username");
         } else if (password.isBlank()) {
             message.setText("Please Enter Password");
-        }
-        else {
+        } else {
             model = new Model();
             User user;
             user = model.getUserDao().getUser(username, hashedPassword);
-            if (user != null){
+            if (user != null) {
                 model.setCurrentUser(user);
                 Model.loggedUser = user.getUsername();
                 Main.setWindow("resources/views/SmartCanvas", 900, 610, "SmartCanvas", true);
