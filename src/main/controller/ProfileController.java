@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Model;
@@ -32,14 +33,19 @@ public class ProfileController {
 
     private Image initialImage;
     private Image image;
-    private String firstName;
-    private String lastName;
+    private Text userName;
+    private ImageView dpImage;
     private Model model;
     private User user;
 
     @FXML
     public void initialize() throws SQLException {
         getLoginDetail();
+    }
+
+    public void SMC(Text userName, ImageView dpImage){
+        this.userName = userName;
+        this.dpImage = dpImage;
     }
 
     @FXML
@@ -52,8 +58,6 @@ public class ProfileController {
         profileLastName.setText(user.getLastname());
         initialImage = user.getDp();
         profilePic.setImage(initialImage);
-        firstName = user.getFirstname();
-        lastName = user.getLastname();
 
     }
 
@@ -77,13 +81,16 @@ public class ProfileController {
 
         if (!profileFirstname.getText().equals(user.getFirstname())) {
             User user = model.getUserDao().getUser(Model.loggedUser);
+            userName.setText(profileFirstname.getText() + " " + user.getLastname());
             model.getUserDao().updateUser(profileFirstname.getText(), user.getLastname(), user.getUsername());
         }
         if (!profileLastName.getText().equals(user.getLastname())) {
             User user = model.getUserDao().getUser(Model.loggedUser);
+            userName.setText(user.getFirstname() + " " + profileLastName.getText());
             model.getUserDao().updateUser(user.getFirstname(), profileLastName.getText(), user.getUsername());
         }
         if (!profilePic.getImage().equals(user.getDp())) {
+            dpImage.setImage(profilePic.getImage());
             model.getUserDao().updateUser(user.getUsername(), profilePic.getImage());
         }
 

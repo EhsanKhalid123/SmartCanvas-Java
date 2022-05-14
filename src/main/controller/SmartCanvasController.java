@@ -96,7 +96,10 @@ public class SmartCanvasController {
     @FXML
     void viewProfile() throws IOException {
         Stage stage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/views/Profile.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/Profile.fxml"));
+        Parent root = fxmlLoader.load();
+        ProfileController pc = fxmlLoader.getController();
+        pc.SMC(userName, dpImage);
         stage.setTitle("Edit profile");
         stage.setScene(new Scene(root, 430, 268));
         stage.setResizable(false);
