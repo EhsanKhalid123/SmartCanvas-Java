@@ -43,7 +43,7 @@ public class ProfileController {
         getLoginDetail();
     }
 
-    public void SMC(Text userName, ImageView dpImage){
+    public void SMC(Text userName, ImageView dpImage) {
         this.userName = userName;
         this.dpImage = dpImage;
     }

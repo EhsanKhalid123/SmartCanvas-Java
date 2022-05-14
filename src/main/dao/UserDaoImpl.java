@@ -24,9 +24,9 @@ public class UserDaoImpl implements UserDao {
     public void setup() throws SQLException {
         try (Connection connection = Database.getConnection();
              Statement stmt = connection.createStatement()) {
-            String sql = "CREATE TABLE IF Not EXISTS " + TABLE_NAME + " (username VARCHAR(10) Not NULL,"
-                    + "hashedPassword VARCHAR(255) Not NULL," + "firstname VARCHAR(10) Not NULL," +
-                    "lastname VARCHAR(10) Not NULL," + "image LONGBLOB," + "PRIMARY KEY (username))";
+            String sql = "CREATE TABLE IF Not EXISTS " + TABLE_NAME + " (username VARCHAR(255) Not NULL,"
+                    + "hashedPassword VARCHAR(255) Not NULL," + "firstname VARCHAR(255) Not NULL," +
+                    "lastname VARCHAR(255) Not NULL," + "image LONGBLOB," + "PRIMARY KEY (username))";
             stmt.executeUpdate(sql);
         }
     }

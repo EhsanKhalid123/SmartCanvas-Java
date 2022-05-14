@@ -3,22 +3,33 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.Model;
 
 public class NewCanvasController {
     @FXML
-    private TextField canvasLength;
+    private TextField canvasHeight;
     @FXML
     private TextField canvasWidth;
     @FXML
     private Button ok;
 
-    public static String length;
+    private Pane borderPane;
+    private StackPane canvas;
+    public static String height;
     public static String width;
+
 
     @FXML
     void initialize() {
+    }
+
+    void SMC(Pane borderPane, StackPane canvas) {
+        this.borderPane = borderPane;
+        this.canvas = canvas;
     }
 
     @FXML
@@ -30,30 +41,23 @@ public class NewCanvasController {
     @FXML
     void newCanvasOk() {
 
-        length = canvasLength.getText();
+        height = canvasHeight.getText();
         width = canvasWidth.getText();
 
-        System.out.println("length: " + length + "Width: " + width);
+        if (!height.isEmpty() || !width.isEmpty()) {
+            canvas.setMinHeight(Double.parseDouble(height));
+            canvas.setMinWidth(Double.parseDouble(width));
+            canvas.setStyle("-fx-background-color: white");
 
-        if (!length.isEmpty() || !width.isEmpty()) {
-
-            Model.pane.setMinHeight(Double.parseDouble(length));
-            Model.pane.setMinWidth(Double.parseDouble(width));
-
-            Model.canvas.setHeight(Double.parseDouble(length));
-            Model.canvas.setWidth(Double.parseDouble(width));
-
-            if (Model.pane.getChildren().contains(Model.canvas)) {
-                Model.pane.getChildren().remove(Model.canvas);
+            if (borderPane.getChildren().contains(canvas)) {
+                borderPane.getChildren().remove(canvas);
             }
-            Model.pane.getChildren().add(Model.canvas);
-            Model.pane.setStyle("-fx-background-color: white");
-
-            if (Model.canvasPane.getChildren().contains(Model.pane)) {
-                Model.canvasPane.getChildren().remove(Model.pane);
-            }
-            Model.canvasPane.getChildren().add(Model.pane);
-            Model.canvasPane.setStyle("-fx-background-color: white");
+            borderPane.getChildren().add(canvas);
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setOffsetX(4);
+            dropShadow.setOffsetY(4);
+            dropShadow.setColor(Color.rgb(107, 106, 106));
+            borderPane.setEffect(dropShadow);
         }
 
         Stage stage = (Stage) ok.getScene().getWindow();

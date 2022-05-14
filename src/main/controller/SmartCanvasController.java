@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -12,7 +11,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -65,13 +64,15 @@ public class SmartCanvasController {
     @FXML
     private Pane borderPane;
 
+    private StackPane canvas = new StackPane();
+
     private Model model;
     private Image image;
 
     @FXML
     public void initialize() throws SQLException {
         getDetails();
-        borderPane.getChildren().add(Model.canvasPane);
+//        canvas.getChildren().add(Model.canvasPane);
     }
 
     public void getDetails() throws SQLException {
@@ -88,8 +89,7 @@ public class SmartCanvasController {
     @FXML
     void logout() throws IOException {
         Model.loggedUser = "";
-        Model.pane.getChildren().remove(Model.canvas);
-        Model.canvasPane.getChildren().remove(Model.pane);
+        borderPane.getChildren().remove(canvas);
         Main.setWindow("resources/views/Login", 481, 460, "Welcome to SmartCanvas!", false);
     }
 
@@ -124,18 +124,21 @@ public class SmartCanvasController {
     @FXML
     void addCanvas() throws IOException {
         Stage stage = new Stage();
-        Parent root2 = FXMLLoader.load(Model.class.getResource("/views/NewCanvas.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Model.class.getResource("/views/NewCanvas.fxml"));
+        Parent root = fxmlLoader.load();
+        NewCanvasController ncc = fxmlLoader.getController();
+        ncc.SMC(borderPane, canvas);
         stage.setTitle("Create a new canvas");
-        stage.setScene(new Scene(root2, 300, 145));
+        stage.setScene(new Scene(root, 300, 145));
         stage.setResizable(false);
         Image icon = new Image(Model.class.getResourceAsStream("/views/Whiteboard-512.png"));
         stage.getIcons().add(icon);
         stage.show();
 
-        if (borderPane.getChildren().contains(Model.canvasPane)) {
-            borderPane.getChildren().remove(Model.canvasPane);
-        }
-        borderPane.getChildren().add(Model.canvasPane);
+//        if (canvas.getChildren().contains(Model.canvasPane)) {
+//            canvas.getChildren().remove(Model.canvasPane);
+//        }
+//        canvas.getChildren().add(Model.canvasPane);
 
     }
 
@@ -151,8 +154,8 @@ public class SmartCanvasController {
             zoomPercentage.setText(newValue.intValue() + "%");
 //            borderPane.setScaleX(newValue.intValue());
 //            borderPane.setScaleY(newValue.intValue());
-            borderPane.setTranslateX((Double) newValue);
-            borderPane.setTranslateY((Double) newValue);
+            canvas.setTranslateX((Double) newValue);
+            canvas.setTranslateY((Double) newValue);
 //            borderPane.getTranslateZ();
 //            Model.canvas.setScaleZ(newValue.intValue());
 //            System.out.println(newValue.intValue());
@@ -160,7 +163,7 @@ public class SmartCanvasController {
 
         });
 
-        borderPane.translateZProperty().bind(zoomSlider.valueProperty());
+        canvas.translateZProperty().bind(zoomSlider.valueProperty());
 
     }
 
@@ -183,9 +186,10 @@ public class SmartCanvasController {
 
     @FXML
     void addRectangle() {
-        GraphicsContext gc = Model.canvas.getGraphicsContext2D();
-        gc.setFill(Color.valueOf("#ff0000"));
-        gc.fillRect(100, 100, 200, 200);
+//        Canvas canvas = new Canvas();
+//        GraphicsContext gc = canvas.getGraphicsContext2D();
+//        gc.setFill(Color.valueOf("#ff0000"));
+//        gc.fillRect(100, 100, 200, 200);
 
     }
 
