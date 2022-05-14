@@ -47,13 +47,15 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="573.0" minWidth="888.0" prefHeight="573.0" prefWidth="888.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SmartCanvasController">
    <children>
-      <Pane fx:id="borderPane" layoutX="92.0" layoutY="76.0" prefHeight="447.2" prefWidth="535.2" AnchorPane.bottomAnchor="49.80000000000001" AnchorPane.leftAnchor="92.0" AnchorPane.rightAnchor="260.79999999999995" AnchorPane.topAnchor="76.0" />
+      <StackPane fx:id="stackPane" disable="true" layoutX="92.0" layoutY="76.0" prefHeight="447.0" prefWidth="535.0" visible="false" AnchorPane.leftAnchor="92.0" AnchorPane.topAnchor="76.0" />
+      <Pane fx:id="borderPane" layoutX="92.0" layoutY="76.0" prefHeight="447.0" prefWidth="535.0" />
       <ToolBar layoutX="649.0" layoutY="53.0" prefHeight="488.0" prefWidth="239.0" AnchorPane.bottomAnchor="26.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="53.0" />
       <ToolBar layoutY="53.0" orientation="VERTICAL" prefHeight="494.0" prefWidth="70.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="53.0">
         <items>
@@ -121,7 +123,7 @@
                               <MenuItem fx:id="saveAsMenu" mnemonicParsing="false" onAction="#saveAs" text="Save as..." />
                         </items>
                       </Menu>
-                      <Menu mnemonicParsing="false" text="Edit">
+                      <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
                         <items>
                           <MenuItem fx:id="deleteMenu" mnemonicParsing="false" text="Delete element" />
                         </items>
@@ -165,26 +167,41 @@
                      <font>
                         <Font size="14.0" fx:id="x3" />
                      </font>
+                     <padding>
+                        <Insets left="2.0" />
+                     </padding>
                   </Label>
                   <Label layoutX="10.0" layoutY="10.0" maxWidth="-1.0" prefHeight="16.0" prefWidth="27.0" text="y: " textAlignment="CENTER">
                      <font>
                         <Font size="14.0" fx:id="x31" />
                      </font>
+                     <padding>
+                        <Insets left="2.0" />
+                     </padding>
                   </Label>
                   <Label layoutX="120.0" layoutY="10.0" maxWidth="-1.0" prefHeight="9.0" prefWidth="26.0" text="w: " textAlignment="CENTER">
                      <font>
                         <Font size="14.0" fx:id="x311" />
                      </font>
+                     <padding>
+                        <Insets left="2.0" />
+                     </padding>
                   </Label>
                   <Label layoutX="231.0" layoutY="10.0" maxWidth="-1.0" prefHeight="16.0" prefWidth="26.0" text="h: " textAlignment="CENTER">
                      <font>
                         <Font size="14.0" fx:id="x3111" />
                      </font>
+                     <padding>
+                        <Insets left="2.0" />
+                     </padding>
                   </Label>
                   <Label layoutX="106.0" layoutY="10.0" maxWidth="-1.0" prefHeight="12.0" prefWidth="63.0" text="angle: " textAlignment="CENTER">
                      <font>
                         <Font size="14.0" />
                      </font>
+                     <padding>
+                        <Insets left="2.0" />
+                     </padding>
                   </Label>
                </items>
             </ToolBar>
@@ -195,7 +212,7 @@
             <ToolBar minWidth="402.0" prefHeight="31.0" prefWidth="427.0" snapToPixel="false" HBox.hgrow="ALWAYS">
                <items>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" disable="true" fill="#1f93ff00" height="18.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="121.0" />
-                  <Slider fx:id="zoomSlider" blockIncrement="1.0" max="200.0" min="-200.0" onDragDetected="#zoom" onDragDone="#zoom" onDragDropped="#zoom" onDragEntered="#zoom" onDragExited="#zoom" onDragOver="#zoom" onMouseDragEntered="#zoom" onMouseDragExited="#zoom" onMouseDragOver="#zoom" onMouseDragReleased="#zoom" onZoom="#zoom" prefHeight="6.0" prefWidth="203.0" />
+                  <Slider fx:id="zoomSlider" blockIncrement="1.0" max="200.0" onDragDetected="#zoom" onDragDone="#zoom" onDragDropped="#zoom" onDragEntered="#zoom" onDragExited="#zoom" onDragOver="#zoom" onMouseDragEntered="#zoom" onMouseDragExited="#zoom" onMouseDragOver="#zoom" onMouseDragReleased="#zoom" onZoom="#zoom" prefHeight="6.0" prefWidth="203.0" />
                   <Label maxWidth="-1.0" prefHeight="20.0" prefWidth="42.0" text="Zoom:">
                      <font>
                         <Font size="14.0" fx:id="x41" />

@@ -40,7 +40,9 @@ public class NewCanvasController {
 
     @FXML
     void newCanvasOk() {
-
+        if (!canvas.getChildren().isEmpty()) {
+            canvas.getChildren().clear();
+        }
         height = canvasHeight.getText();
         width = canvasWidth.getText();
 
@@ -50,12 +52,13 @@ public class NewCanvasController {
             canvas.setStyle("-fx-background-color: white");
 
             if (borderPane.getChildren().contains(canvas)) {
+
                 borderPane.getChildren().remove(canvas);
             }
             borderPane.getChildren().add(canvas);
             DropShadow dropShadow = new DropShadow();
-            dropShadow.setOffsetX(4);
-            dropShadow.setOffsetY(4);
+            dropShadow.setOffsetX(2);
+            dropShadow.setOffsetY(2);
             dropShadow.setColor(Color.rgb(107, 106, 106));
             borderPane.setEffect(dropShadow);
         }

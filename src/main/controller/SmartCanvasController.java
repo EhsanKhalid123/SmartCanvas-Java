@@ -4,10 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -15,12 +12,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import model.Model;
 import model.User;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 public class SmartCanvasController {
@@ -63,6 +63,8 @@ public class SmartCanvasController {
     private Slider zoomSlider;
     @FXML
     private Pane borderPane;
+    @FXML
+    private Menu editMenu;
 
     private StackPane canvas = new StackPane();
 
@@ -72,7 +74,6 @@ public class SmartCanvasController {
     @FXML
     public void initialize() throws SQLException {
         getDetails();
-//        canvas.getChildren().add(Model.canvasPane);
     }
 
     public void getDetails() throws SQLException {
@@ -134,12 +135,6 @@ public class SmartCanvasController {
         Image icon = new Image(Model.class.getResourceAsStream("/views/Whiteboard-512.png"));
         stage.getIcons().add(icon);
         stage.show();
-
-//        if (canvas.getChildren().contains(Model.canvasPane)) {
-//            canvas.getChildren().remove(Model.canvasPane);
-//        }
-//        canvas.getChildren().add(Model.canvasPane);
-
     }
 
     @FXML
@@ -152,18 +147,14 @@ public class SmartCanvasController {
         zoomPercentage.setText("0%");
         zoomSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> {
             zoomPercentage.setText(newValue.intValue() + "%");
-//            borderPane.setScaleX(newValue.intValue());
-//            borderPane.setScaleY(newValue.intValue());
-            canvas.setTranslateX((Double) newValue);
-            canvas.setTranslateY((Double) newValue);
-//            borderPane.getTranslateZ();
-//            Model.canvas.setScaleZ(newValue.intValue());
-//            System.out.println(newValue.intValue());
-//            Model.canvas.setTranslateY(newValue.intValue());
+            canvas.setScaleX((Double) newValue);
+            canvas.setScaleY((Double) newValue);
 
+            canvas.setTranslateX(newValue.doubleValue() * 0);
+            canvas.setTranslateY(newValue.doubleValue() * 0);
+            borderPane.setTranslateX(newValue.doubleValue() * 0);
+            borderPane.setTranslateY(newValue.doubleValue() * 0);
         });
-
-        canvas.translateZProperty().bind(zoomSlider.valueProperty());
 
     }
 
@@ -174,14 +165,53 @@ public class SmartCanvasController {
 
     @FXML
     void addImage() {
-        FileChooser fileChooser = new FileChooser();
         Stage stage = new Stage();
+        ImageView imageView = new ImageView();
+        if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
+            canvas.getChildren().add(imageView);
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        // Set extension filter
+        ExtensionFilter bitmapFilter = new FileChooser.ExtensionFilter("Bitmap Files (*.bmp;*.dib)", "*.bmp", "*.dib");
+        ExtensionFilter jpegFilter = new FileChooser.ExtensionFilter("JPEG (*.jpg;*.jpeg;*.jpe;*.jiff)", "*.jpg", "*.jpeg", "*.jpe", "*.jiff");
+        ExtensionFilter gifFilter = new FileChooser.ExtensionFilter("GIF (*.gif)", "*.gif");
+        ExtensionFilter tiffFilter = new FileChooser.ExtensionFilter("TIFF (*.tif;*.tiff)", "*.tif", "*.tiff");
+        ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG (*.png)", "*.png");
+        ExtensionFilter icoFilter = new FileChooser.ExtensionFilter("ICO (*.ico)", "*.ico");
+        ExtensionFilter heicFilter = new FileChooser.ExtensionFilter("HEIC (*.heic)", "*.heic");
+        ExtensionFilter webpFilter = new FileChooser.ExtensionFilter("WEBP (*.webp)", "*.webp");
+        ExtensionFilter allFilter = new FileChooser.ExtensionFilter("All Picture Files", "*.bmp", "*.dib",
+                "*.jpg", "*.jpeg", "*.jpe", "*.jiff", "*.gif", "*.tif", "*.tiff", "*.png", "*.ico", "*.heic", "*.webp");
+        ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All Files", "*");
+
+        fileChooser.getExtensionFilters().add(extFilter);
+        fileChooser.getExtensionFilters().add(allFilter);
+        fileChooser.getExtensionFilters().add(webpFilter);
+        fileChooser.getExtensionFilters().add(heicFilter);
+        fileChooser.getExtensionFilters().add(icoFilter);
+        fileChooser.getExtensionFilters().add(pngFilter);
+        fileChooser.getExtensionFilters().add(tiffFilter);
+        fileChooser.getExtensionFilters().add(gifFilter);
+        fileChooser.getExtensionFilters().add(jpegFilter);
+        fileChooser.getExtensionFilters().add(bitmapFilter);
+        // Show a file open dialog
         File file = fileChooser.showOpenDialog(stage);
-        javafx.scene.image.Image image = new javafx.scene.image.Image(file.toURI().toString());
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(10);
-        imageView.setFitHeight(10);
+
+        InputStream fileInputStream;
         imageView.setPreserveRatio(true);
+        imageView.setFitHeight(100);
+        imageView.setFitWidth(100);
+        try {
+            fileInputStream = new FileInputStream(file);
+            imageView.setImage(new Image(fileInputStream));
+
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+
+        deleteMenu.setOnAction(event -> imageView.setImage(null));
+
     }
 
     @FXML
