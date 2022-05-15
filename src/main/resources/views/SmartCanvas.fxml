@@ -125,7 +125,7 @@
                       </Menu>
                       <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
                         <items>
-                          <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#deleteButton" text="Delete element" />
+                              <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#deleteButton" text="Delete element" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Help">
@@ -163,7 +163,7 @@
          <children>
             <ToolBar minWidth="444.0" prefHeight="24.0" prefWidth="458.0" snapToPixel="false" HBox.hgrow="ALWAYS">
                <items>
-                  <Label fx:id="nodeInfo" maxWidth="-1.0" prefHeight="22.0" prefWidth="211.0" text="x:   y:   w:   h:    angle: " textAlignment="CENTER">
+                  <Label fx:id="nodeInfo" maxWidth="-1.0" prefHeight="22.0" prefWidth="349.0" text="x:   y:   w:   h:    angle: " textAlignment="CENTER">
                      <font>
                         <Font size="14.0" fx:id="x3" />
                      </font>

@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Pane;
@@ -19,6 +20,7 @@ public class NewCanvasController {
 
     private Pane borderPane;
     private StackPane canvas;
+    private MenuItem saveAsMenu;
     public static String height;
     public static String width;
 
@@ -27,9 +29,10 @@ public class NewCanvasController {
     void initialize() {
     }
 
-    void SMC(Pane borderPane, StackPane canvas) {
+    void SMC(Pane borderPane, StackPane canvas, MenuItem saveAsMenu) {
         this.borderPane = borderPane;
         this.canvas = canvas;
+        this.saveAsMenu = saveAsMenu;
     }
 
     @FXML
@@ -47,12 +50,10 @@ public class NewCanvasController {
         width = canvasWidth.getText();
 
         if (!height.isEmpty() || !width.isEmpty()) {
-            canvas.setMinHeight(Double.parseDouble(height));
-            canvas.setMinWidth(Double.parseDouble(width));
+            canvas.setMinSize(Double.parseDouble(height), Double.parseDouble(width));
             canvas.setStyle("-fx-background-color: white");
 
             if (borderPane.getChildren().contains(canvas)) {
-
                 borderPane.getChildren().remove(canvas);
             }
             borderPane.getChildren().add(canvas);
@@ -63,8 +64,21 @@ public class NewCanvasController {
             borderPane.setEffect(dropShadow);
         }
 
+//        todo Ask Why is this working opposite to what I am asking
+//          when I write 1920 1080 then the button disables unless i write 0 0 then 1920 1080 and why height and length
+//          mixed up for when saving picture and for when viewing in software
+
+        if (canvas.getHeight() == 0 && canvas.getWidth() == 0) {
+            saveAsMenu.setDisable(false);
+        } else {
+            saveAsMenu.setDisable(true);
+        }
+
         Stage stage = (Stage) ok.getScene().getWindow();
         stage.close();
+
+
+
     }
 
 }

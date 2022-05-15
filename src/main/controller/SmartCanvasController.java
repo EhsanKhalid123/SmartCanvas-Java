@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -8,11 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 import model.Model;
 import model.User;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -83,9 +85,8 @@ public class SmartCanvasController {
     // Original coordinates of the node before each dragging
     private double originX;
     private double originY;
-
-    private Clipboard clipboard;
-    ClipboardContent content = new ClipboardContent();
+    private double originW;
+    private double originH;
 
     @FXML
     public void initialize() throws SQLException {
@@ -93,6 +94,9 @@ public class SmartCanvasController {
         fileMenu.setOnShowing(event -> {
             if (canvas.getChildren().isEmpty() == true) {
                 clearCanvasMenu.setDisable(true);
+            }
+            if (borderPane.getChildren().contains(canvas) == false) {
+                saveAsMenu.setDisable(true);
             }
         });
 
@@ -153,18 +157,13 @@ public class SmartCanvasController {
         FXMLLoader fxmlLoader = new FXMLLoader(Model.class.getResource("/views/NewCanvas.fxml"));
         Parent root = fxmlLoader.load();
         NewCanvasController ncc = fxmlLoader.getController();
-        ncc.SMC(borderPane, canvas);
+        ncc.SMC(borderPane, canvas, saveAsMenu);
         stage.setTitle("Create a new canvas");
         stage.setScene(new Scene(root, 300, 145));
         stage.setResizable(false);
         Image icon = new Image(Model.class.getResourceAsStream("/views/Whiteboard-512.png"));
         stage.getIcons().add(icon);
         stage.show();
-    }
-
-    @FXML
-    void colourCanvas() {
-
     }
 
     @FXML
@@ -184,79 +183,90 @@ public class SmartCanvasController {
     }
 
     @FXML
-    void addCircle() {
-
-    }
-
-    @FXML
     void addImage() {
-        Stage stage = new Stage();
-        ImageView imageView = new ImageView();
         if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
-            canvas.getChildren().add(imageView);
+            Stage stage = new Stage();
+            ImageView imageView = new ImageView();
+            if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
+                canvas.getChildren().add(imageView);
+            }
+
+            FileChooser fileChooser = new FileChooser();
+            // Set extension filter
+            ExtensionFilter bitmapFilter = new FileChooser.ExtensionFilter("Bitmap Files (*.bmp;*.dib)", "*.bmp", "*.dib");
+            ExtensionFilter jpegFilter = new FileChooser.ExtensionFilter("JPEG (*.jpg;*.jpeg;*.jpe;*.jiff)",
+                    "*.jpg", "*.jpeg", "*.jpe", "*.jiff");
+            ExtensionFilter gifFilter = new FileChooser.ExtensionFilter("GIF (*.gif)", "*.gif");
+            ExtensionFilter tiffFilter = new FileChooser.ExtensionFilter("TIFF (*.tif;*.tiff)", "*.tif", "*.tiff");
+            ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG (*.png)", "*.png");
+            ExtensionFilter icoFilter = new FileChooser.ExtensionFilter("ICO (*.ico)", "*.ico");
+            ExtensionFilter heicFilter = new FileChooser.ExtensionFilter("HEIC (*.heic)", "*.heic");
+            ExtensionFilter webpFilter = new FileChooser.ExtensionFilter("WEBP (*.webp)", "*.webp");
+            ExtensionFilter allFilter = new FileChooser.ExtensionFilter("All Picture Files", "*.bmp", "*.dib",
+                    "*.jpg", "*.jpeg", "*.jpe", "*.jiff", "*.gif", "*.tif", "*.tiff", "*.png", "*.ico", "*.heic", "*.webp");
+            ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All Files", "*");
+
+            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.getExtensionFilters().add(allFilter);
+            fileChooser.getExtensionFilters().add(webpFilter);
+            fileChooser.getExtensionFilters().add(heicFilter);
+            fileChooser.getExtensionFilters().add(icoFilter);
+            fileChooser.getExtensionFilters().add(pngFilter);
+            fileChooser.getExtensionFilters().add(tiffFilter);
+            fileChooser.getExtensionFilters().add(gifFilter);
+            fileChooser.getExtensionFilters().add(jpegFilter);
+            fileChooser.getExtensionFilters().add(bitmapFilter);
+
+            // Show a file open dialog
+            File file = fileChooser.showOpenDialog(stage);
+
+            InputStream fileInputStream;
+            imageView.setPreserveRatio(true);
+            imageView.setFitHeight(200);
+            imageView.setFitWidth(200);
+            try {
+                fileInputStream = new FileInputStream(file);
+                imageView.setImage(new Image(fileInputStream));
+                clearCanvasMenu.setDisable(false);
+            } catch (Exception e) {
+                System.out.println("No Image Selected!");
+            }
+            calcCoordinates(imageView);
         }
-
-        FileChooser fileChooser = new FileChooser();
-        // Set extension filter
-        ExtensionFilter bitmapFilter = new FileChooser.ExtensionFilter("Bitmap Files (*.bmp;*.dib)", "*.bmp", "*.dib");
-        ExtensionFilter jpegFilter = new FileChooser.ExtensionFilter("JPEG (*.jpg;*.jpeg;*.jpe;*.jiff)", "*.jpg", "*.jpeg", "*.jpe", "*.jiff");
-        ExtensionFilter gifFilter = new FileChooser.ExtensionFilter("GIF (*.gif)", "*.gif");
-        ExtensionFilter tiffFilter = new FileChooser.ExtensionFilter("TIFF (*.tif;*.tiff)", "*.tif", "*.tiff");
-        ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG (*.png)", "*.png");
-        ExtensionFilter icoFilter = new FileChooser.ExtensionFilter("ICO (*.ico)", "*.ico");
-        ExtensionFilter heicFilter = new FileChooser.ExtensionFilter("HEIC (*.heic)", "*.heic");
-        ExtensionFilter webpFilter = new FileChooser.ExtensionFilter("WEBP (*.webp)", "*.webp");
-        ExtensionFilter allFilter = new FileChooser.ExtensionFilter("All Picture Files", "*.bmp", "*.dib",
-                "*.jpg", "*.jpeg", "*.jpe", "*.jiff", "*.gif", "*.tif", "*.tiff", "*.png", "*.ico", "*.heic", "*.webp");
-        ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All Files", "*");
-
-        fileChooser.getExtensionFilters().add(extFilter);
-        fileChooser.getExtensionFilters().add(allFilter);
-        fileChooser.getExtensionFilters().add(webpFilter);
-        fileChooser.getExtensionFilters().add(heicFilter);
-        fileChooser.getExtensionFilters().add(icoFilter);
-        fileChooser.getExtensionFilters().add(pngFilter);
-        fileChooser.getExtensionFilters().add(tiffFilter);
-        fileChooser.getExtensionFilters().add(gifFilter);
-        fileChooser.getExtensionFilters().add(jpegFilter);
-        fileChooser.getExtensionFilters().add(bitmapFilter);
-        // Show a file open dialog
-        File file = fileChooser.showOpenDialog(stage);
-
-        InputStream fileInputStream;
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(200);
-        imageView.setFitWidth(200);
-        try {
-            fileInputStream = new FileInputStream(file);
-            imageView.setImage(new Image(fileInputStream));
-            clearCanvasMenu.setDisable(false);
-        } catch (Exception e) {
-            System.out.println("No Image Selected!");
-        }
-
-        calcCoordinates(imageView);
-
     }
 
     @FXML
     void addRectangle() {
-
         Rectangle rectangle = new Rectangle(50, 50, 100, 100);
-
         if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
             canvas.getChildren().add(rectangle);
         }
-
         rectangle.setFill(Color.valueOf("#1bbcd1"));
-
+        clearCanvasMenu.setDisable(false);
         calcCoordinates(rectangle);
+    }
 
-
+    @FXML
+    void addCircle() {
+        Circle circle = new Circle(50, 50, 50);
+        if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
+            canvas.getChildren().add(circle);
+        }
+        circle.setFill(Color.valueOf("#0ec943"));
+        clearCanvasMenu.setDisable(false);
+        calcCoordinates(circle);
     }
 
     @FXML
     void addText() {
+        Text text = new Text("Text");
+
+        if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
+            canvas.getChildren().add(text);
+        }
+        text.setFont(Font.font(12));
+        clearCanvasMenu.setDisable(false);
+        calcCoordinates(text);
 
     }
 
@@ -270,6 +280,24 @@ public class SmartCanvasController {
 
     @FXML
     void saveAs() {
+        if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
+            WritableImage wim = new WritableImage((int) canvas.getHeight(), (int) canvas.getWidth());
+            canvas.snapshot(null, wim);
+            FileChooser fileChooser = new FileChooser();
+            Stage stage = new Stage();
+
+            File file = fileChooser.showSaveDialog(stage);
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", file);
+            } catch (Exception e) {
+            }
+
+        }
+
+    }
+
+    @FXML
+    void colourCanvas() {
 
     }
 
@@ -302,9 +330,10 @@ public class SmartCanvasController {
     private void move(Node node, double dx, double dy) {
         double x = node.getBoundsInParent().getMinX();
         double y = node.getBoundsInParent().getMinY();
-        nodeInfo.setText(String.format("x: %.2f y: %.2f", x + dx, y + dy));
-//        nodeInfo.setText(String.format("x: %.2f y: %.2f w: %.2f h: %.2f angle: %.2f", x + dx, y + dy, 0.00, 0.00));
-        node.relocate(x + dx, y + dy);
+        double h = node.getBoundsInParent().getHeight();
+        double w = node.getBoundsInParent().getWidth();
+        nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f", x + dx, y + dy, w, h, 0.00));
+        node.relocate(x + dx, y + dy); // Doesnt Work why
         node.setTranslateX(x + dx);
         node.setTranslateY(y + dy);
     }
