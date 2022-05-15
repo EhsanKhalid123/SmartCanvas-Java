@@ -2,13 +2,18 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -58,6 +63,8 @@ public class SmartCanvasController {
     @FXML
     private Font x4;
     @FXML
+    private Label nodeInfo;
+    @FXML
     private Label zoomPercentage;
     @FXML
     private Slider zoomSlider;
@@ -65,15 +72,33 @@ public class SmartCanvasController {
     private Pane borderPane;
     @FXML
     private Menu editMenu;
+    @FXML
+    private Menu fileMenu;
 
     private StackPane canvas = new StackPane();
 
     private Model model;
     private Image image;
 
+    // Original coordinates of the node before each dragging
+    private double originX;
+    private double originY;
+
+    private Clipboard clipboard;
+    ClipboardContent content = new ClipboardContent();
+
     @FXML
     public void initialize() throws SQLException {
         getDetails();
+        fileMenu.setOnShowing(event -> {
+            if (canvas.getChildren().isEmpty() == true) {
+                clearCanvasMenu.setDisable(true);
+            }
+        });
+
+        editMenu.setOnShowing(event -> {
+            deleteMenu.setDisable(true);
+        });
     }
 
     public void getDetails() throws SQLException {
@@ -200,26 +225,33 @@ public class SmartCanvasController {
 
         InputStream fileInputStream;
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(100);
-        imageView.setFitWidth(100);
+        imageView.setFitHeight(200);
+        imageView.setFitWidth(200);
         try {
             fileInputStream = new FileInputStream(file);
             imageView.setImage(new Image(fileInputStream));
-
+            clearCanvasMenu.setDisable(false);
         } catch (Exception e) {
-//            e.printStackTrace();
+            System.out.println("No Image Selected!");
         }
 
-        deleteMenu.setOnAction(event -> imageView.setImage(null));
+        calcCoordinates(imageView);
 
     }
 
     @FXML
     void addRectangle() {
-//        Canvas canvas = new Canvas();
-//        GraphicsContext gc = canvas.getGraphicsContext2D();
-//        gc.setFill(Color.valueOf("#ff0000"));
-//        gc.fillRect(100, 100, 200, 200);
+
+        Rectangle rectangle = new Rectangle(50, 50, 100, 100);
+
+        if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
+            canvas.getChildren().add(rectangle);
+        }
+
+        rectangle.setFill(Color.valueOf("#1bbcd1"));
+
+        calcCoordinates(rectangle);
+
 
     }
 
@@ -230,13 +262,51 @@ public class SmartCanvasController {
 
     @FXML
     void clearCanvas() {
-
+        if (canvas.getChildren().isEmpty() == false) {
+            canvas.getChildren().clear();
+        }
     }
 
 
     @FXML
     void saveAs() {
 
+    }
+
+
+    @FXML
+    void deleteButton() {
+
+    }
+
+    private void calcCoordinates(Node node) {
+        // Move the node by dragging
+        node.setOnMousePressed(e -> {
+            originX = e.getX();
+            originY = e.getY();
+        });
+
+        node.setOnMouseDragged(e -> {
+            double dx = e.getX() - originX;
+            double dy = e.getY() - originY;
+            move(node, dx, dy);
+        });
+
+        node.setOnMouseClicked(e -> {
+            // ToDo // Add select shape Feature and Delete Element if shape selected
+            node.requestFocus();
+            deleteMenu.setDisable(false);
+        });
+    }
+
+    private void move(Node node, double dx, double dy) {
+        double x = node.getBoundsInParent().getMinX();
+        double y = node.getBoundsInParent().getMinY();
+        nodeInfo.setText(String.format("x: %.2f y: %.2f", x + dx, y + dy));
+//        nodeInfo.setText(String.format("x: %.2f y: %.2f w: %.2f h: %.2f angle: %.2f", x + dx, y + dy, 0.00, 0.00));
+        node.relocate(x + dx, y + dy);
+        node.setTranslateX(x + dx);
+        node.setTranslateY(y + dy);
     }
 
 }

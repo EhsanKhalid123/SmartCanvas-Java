@@ -115,7 +115,7 @@
               <items>
                   <MenuBar cache="true" prefHeight="36.0" prefWidth="238.0" style="-fx-background-color: ffffff00;">
                     <menus>
-                      <Menu mnemonicParsing="false" text="File">
+                      <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
                         <items>
                           <MenuItem fx:id="newCanvasMenu" mnemonicParsing="false" onAction="#addCanvas" text="New canvas" />
                               <MenuItem fx:id="clearCanvasMenu" mnemonicParsing="false" onAction="#clearCanvas" text="Clear canvas" />
@@ -125,7 +125,7 @@
                       </Menu>
                       <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
                         <items>
-                          <MenuItem fx:id="deleteMenu" mnemonicParsing="false" text="Delete element" />
+                          <MenuItem fx:id="deleteMenu" mnemonicParsing="false" onAction="#deleteButton" text="Delete element" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Help">
@@ -163,41 +163,9 @@
          <children>
             <ToolBar minWidth="444.0" prefHeight="24.0" prefWidth="458.0" snapToPixel="false" HBox.hgrow="ALWAYS">
                <items>
-                  <Label maxWidth="-1.0" prefHeight="21.0" prefWidth="30.0" text="x: " textAlignment="CENTER">
+                  <Label fx:id="nodeInfo" maxWidth="-1.0" prefHeight="22.0" prefWidth="211.0" text="x:   y:   w:   h:    angle: " textAlignment="CENTER">
                      <font>
                         <Font size="14.0" fx:id="x3" />
-                     </font>
-                     <padding>
-                        <Insets left="2.0" />
-                     </padding>
-                  </Label>
-                  <Label layoutX="10.0" layoutY="10.0" maxWidth="-1.0" prefHeight="16.0" prefWidth="27.0" text="y: " textAlignment="CENTER">
-                     <font>
-                        <Font size="14.0" fx:id="x31" />
-                     </font>
-                     <padding>
-                        <Insets left="2.0" />
-                     </padding>
-                  </Label>
-                  <Label layoutX="120.0" layoutY="10.0" maxWidth="-1.0" prefHeight="9.0" prefWidth="26.0" text="w: " textAlignment="CENTER">
-                     <font>
-                        <Font size="14.0" fx:id="x311" />
-                     </font>
-                     <padding>
-                        <Insets left="2.0" />
-                     </padding>
-                  </Label>
-                  <Label layoutX="231.0" layoutY="10.0" maxWidth="-1.0" prefHeight="16.0" prefWidth="26.0" text="h: " textAlignment="CENTER">
-                     <font>
-                        <Font size="14.0" fx:id="x3111" />
-                     </font>
-                     <padding>
-                        <Insets left="2.0" />
-                     </padding>
-                  </Label>
-                  <Label layoutX="106.0" layoutY="10.0" maxWidth="-1.0" prefHeight="12.0" prefWidth="63.0" text="angle: " textAlignment="CENTER">
-                     <font>
-                        <Font size="14.0" />
                      </font>
                      <padding>
                         <Insets left="2.0" />

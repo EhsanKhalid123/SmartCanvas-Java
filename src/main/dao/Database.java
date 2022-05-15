@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class Database {
 	// URL pattern for database
-//	private static final String DB_URL = "jdbc:sqlite:application.db";
+
 	private static final String createDB_URL = "jdbc:mysql://localhost/";
 	private static final String DB_URL = "jdbc:mysql://localhost/application";
 	private final String DB_NAME = "application";
@@ -20,10 +20,8 @@ public class Database {
 			String sql = "CREATE DATABASE IF NOT EXISTS " + DB_NAME;
 			stmt.executeUpdate(sql);
 
-//			System.out.println("Database created successfully...");
-
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("An error occurred - Possible Cause: connection to database was refused");
 		}
 	}
 
