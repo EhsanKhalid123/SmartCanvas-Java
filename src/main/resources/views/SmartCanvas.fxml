@@ -47,14 +47,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="573.0" minWidth="888.0" prefHeight="573.0" prefWidth="888.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SmartCanvasController">
    <children>
-      <StackPane fx:id="stackPane" disable="true" layoutX="92.0" layoutY="76.0" prefHeight="447.0" prefWidth="535.0" visible="false" AnchorPane.leftAnchor="92.0" AnchorPane.topAnchor="76.0" />
       <Pane fx:id="borderPane" layoutX="92.0" layoutY="76.0" prefHeight="447.0" prefWidth="535.0" />
       <ToolBar layoutX="649.0" layoutY="53.0" prefHeight="488.0" prefWidth="239.0" AnchorPane.bottomAnchor="26.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="53.0" />
       <ToolBar layoutY="53.0" orientation="VERTICAL" prefHeight="494.0" prefWidth="70.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="53.0">

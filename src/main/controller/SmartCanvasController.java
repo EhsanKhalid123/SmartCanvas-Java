@@ -11,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -19,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Model;
 import model.User;
@@ -77,7 +77,7 @@ public class SmartCanvasController {
     @FXML
     private Menu fileMenu;
 
-    private StackPane canvas = new StackPane();
+    private Pane canvas = new Pane();
 
     private Model model;
     private Image image;
@@ -91,6 +91,7 @@ public class SmartCanvasController {
     @FXML
     public void initialize() throws SQLException {
         getDetails();
+        nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f°", 0.00 + 0.00, 0.00 + 0.00, 0.00, 0.00, 0.00));
         fileMenu.setOnShowing(event -> {
             if (canvas.getChildren().isEmpty() == true) {
                 clearCanvasMenu.setDisable(true);
@@ -130,12 +131,13 @@ public class SmartCanvasController {
         Parent root = fxmlLoader.load();
         ProfileController pc = fxmlLoader.getController();
         pc.SMC(userName, dpImage);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Edit profile");
         stage.setScene(new Scene(root, 430, 268));
         stage.setResizable(false);
         Image icon = new Image(getClass().getResourceAsStream("/views/Whiteboard-512.png"));
         stage.getIcons().add(icon);
-        stage.show();
+        stage.showAndWait();
 
     }
 
@@ -157,13 +159,14 @@ public class SmartCanvasController {
         FXMLLoader fxmlLoader = new FXMLLoader(Model.class.getResource("/views/NewCanvas.fxml"));
         Parent root = fxmlLoader.load();
         NewCanvasController ncc = fxmlLoader.getController();
-        ncc.SMC(borderPane, canvas, saveAsMenu);
+        ncc.SMC(borderPane, canvas, saveAsMenu, fileMenu);
         stage.setTitle("Create a new canvas");
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(new Scene(root, 300, 145));
         stage.setResizable(false);
         Image icon = new Image(Model.class.getResourceAsStream("/views/Whiteboard-512.png"));
         stage.getIcons().add(icon);
-        stage.show();
+        stage.showAndWait();
     }
 
     @FXML
@@ -274,6 +277,8 @@ public class SmartCanvasController {
     void clearCanvas() {
         if (canvas.getChildren().isEmpty() == false) {
             canvas.getChildren().clear();
+            clearCanvasMenu.setDisable(true);
+            nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f°", 0.00 + 0.00, 0.00 + 0.00, 0.00, 0.00, 0.00));
         }
     }
 
@@ -332,10 +337,10 @@ public class SmartCanvasController {
         double y = node.getBoundsInParent().getMinY();
         double h = node.getBoundsInParent().getHeight();
         double w = node.getBoundsInParent().getWidth();
-        nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f", x + dx, y + dy, w, h, 0.00));
-        node.relocate(x + dx, y + dy); // Doesnt Work why
-        node.setTranslateX(x + dx);
-        node.setTranslateY(y + dy);
+        nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f°", x + dx, y + dy, w, h, 0.00));
+        node.relocate(x + dx, y + dy);
+//        node.setTranslateX(x + dx);
+//        node.setTranslateY(y + dy);
     }
 
 }
