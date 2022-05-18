@@ -81,16 +81,22 @@ public class SmartCanvasController {
 
     private Model model;
     private Image image;
+    private Node selectedElement;
+    private Color colorOfSelectedElement;
+    private Text text;
+    private Circle circle;
+    private Rectangle rectangle;
+    private ImageView imageView;
 
     // Original coordinates of the node before each dragging
     private double originX;
     private double originY;
-    private double originW;
-    private double originH;
 
     @FXML
     public void initialize() throws SQLException {
         getDetails();
+        setPaneZoom(100);
+        zoomSlider.setValue(100);
         nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f°", 0.00 + 0.00, 0.00 + 0.00, 0.00, 0.00, 0.00));
         fileMenu.setOnShowing(event -> {
             if (canvas.getChildren().isEmpty() == true) {
@@ -102,7 +108,9 @@ public class SmartCanvasController {
         });
 
         editMenu.setOnShowing(event -> {
-            deleteMenu.setDisable(true);
+            if (selectedElement == null) {
+                deleteMenu.setDisable(true);
+            }
         });
     }
 
@@ -171,25 +179,24 @@ public class SmartCanvasController {
 
     @FXML
     void zoom() {
-        zoomPercentage.setText("0%");
         zoomSlider.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-            zoomPercentage.setText(newValue.intValue() + "%");
-            canvas.setScaleX((Double) newValue);
-            canvas.setScaleY((Double) newValue);
-
-            canvas.setTranslateX(newValue.doubleValue() * 0);
-            canvas.setTranslateY(newValue.doubleValue() * 0);
-            borderPane.setTranslateX(newValue.doubleValue() * 0);
-            borderPane.setTranslateY(newValue.doubleValue() * 0);
+            setPaneZoom(newValue.intValue());
         });
+    }
 
+    private void setPaneZoom(int percentage) {
+        if (canvas != null) {
+            canvas.setScaleX(percentage / 100.0);
+            canvas.setScaleY(percentage / 100.0);
+            zoomPercentage.setText(percentage + "%");
+        }
     }
 
     @FXML
     void addImage() {
         if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
             Stage stage = new Stage();
-            ImageView imageView = new ImageView();
+            imageView = new ImageView();
             if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
                 canvas.getChildren().add(imageView);
             }
@@ -235,34 +242,37 @@ public class SmartCanvasController {
                 System.out.println("No Image Selected!");
             }
             calcCoordinates(imageView);
+            selectEvent(imageView);
         }
     }
 
     @FXML
     void addRectangle() {
-        Rectangle rectangle = new Rectangle(50, 50, 100, 100);
+        rectangle = new Rectangle(100, 100, 100, 100);
         if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
             canvas.getChildren().add(rectangle);
         }
         rectangle.setFill(Color.valueOf("#1bbcd1"));
         clearCanvasMenu.setDisable(false);
         calcCoordinates(rectangle);
+        selectEvent(rectangle);
     }
 
     @FXML
     void addCircle() {
-        Circle circle = new Circle(50, 50, 50);
+        circle = new Circle(70, 70, 50);
         if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
             canvas.getChildren().add(circle);
         }
         circle.setFill(Color.valueOf("#0ec943"));
         clearCanvasMenu.setDisable(false);
         calcCoordinates(circle);
+        selectEvent(circle);
     }
 
     @FXML
     void addText() {
-        Text text = new Text("Text");
+        text = new Text(20, 20, "Text");
 
         if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
             canvas.getChildren().add(text);
@@ -270,6 +280,7 @@ public class SmartCanvasController {
         text.setFont(Font.font(12));
         clearCanvasMenu.setDisable(false);
         calcCoordinates(text);
+        selectEvent(text);
 
     }
 
@@ -279,6 +290,7 @@ public class SmartCanvasController {
             canvas.getChildren().clear();
             clearCanvasMenu.setDisable(true);
             nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f°", 0.00 + 0.00, 0.00 + 0.00, 0.00, 0.00, 0.00));
+            deleteMenu.setDisable(true);
         }
     }
 
@@ -309,7 +321,11 @@ public class SmartCanvasController {
 
     @FXML
     void deleteButton() {
-
+        canvas.getChildren().remove(selectedElement);
+        deleteMenu.setDisable(true);
+        if (canvas.getChildren().isEmpty() == true) {
+            clearCanvasMenu.setDisable(true);
+        }
     }
 
     private void calcCoordinates(Node node) {
@@ -324,12 +340,44 @@ public class SmartCanvasController {
             double dy = e.getY() - originY;
             move(node, dx, dy);
         });
+    }
 
+    public void selectEvent(Node node) {
         node.setOnMouseClicked(e -> {
-            // ToDo // Add select shape Feature and Delete Element if shape selected
+            unselect();
+            select(node);
             node.requestFocus();
-            deleteMenu.setDisable(false);
         });
+    }
+
+    public void select(Node node) {
+        selectedElement = node;
+        deleteMenu.setDisable(false);
+//        colorOfSelectedElement = (Color) selectedElement.getStroke();
+        if (selectedElement instanceof Circle) {
+            circle.setStroke(Color.RED);
+        } else if (selectedElement instanceof Rectangle) {
+            rectangle.setStroke(Color.RED);
+        } else if (selectedElement instanceof Text) {
+            text.setStroke(Color.RED);
+        } else if (selectedElement instanceof ImageView) {
+            imageView.setStyle("-fx-opacity: 50%");
+        }
+
+    }
+
+    public void unselect() {
+        if (selectedElement instanceof Circle) {
+            circle.setStroke(colorOfSelectedElement);
+        } else if (selectedElement instanceof Rectangle) {
+            rectangle.setStroke(colorOfSelectedElement);
+        } else if (selectedElement instanceof Text) {
+            text.setStroke(colorOfSelectedElement);
+        } else if (selectedElement instanceof ImageView) {
+            imageView.setStyle("-fx-opacity: 100%");
+        }
+
+        selectedElement = null;
     }
 
     private void move(Node node, double dx, double dy) {
@@ -339,8 +387,6 @@ public class SmartCanvasController {
         double w = node.getBoundsInParent().getWidth();
         nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f°", x + dx, y + dy, w, h, 0.00));
         node.relocate(x + dx, y + dy);
-//        node.setTranslateX(x + dx);
-//        node.setTranslateY(y + dy);
     }
 
 }
