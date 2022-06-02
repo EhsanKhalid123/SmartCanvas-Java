@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -24,18 +26,37 @@ import model.Model;
 import model.User;
 
 import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.SQLException;
 
 public class SmartCanvasController {
 
     @FXML
+    private Button Bold;
+    @FXML
+    private Button Italics;
+    @FXML
     private MenuItem aboutMenu;
     @FXML
+    private Pane borderPane;
+    @FXML
     private Button canvasButton;
+    @FXML
+    private ColorPicker canvasColourPicker;
+    @FXML
+    private ToolBar canvasProperties;
+    @FXML
+    private Button centerAlign;
+    @FXML
+    private Button changePath;
+    @FXML
+    private ColorPicker circRectBackground;
+    @FXML
+    private TextField circRectBorderWidth;
+    @FXML
+    private ColorPicker circRectColourPicker;
+    @FXML
+    private ToolBar circRectProperties;
     @FXML
     private Button circleButton;
     @FXML
@@ -45,37 +66,54 @@ public class SmartCanvasController {
     @FXML
     private ImageView dpImage;
     @FXML
+    private Menu editMenu;
+    @FXML
+    private Menu fileMenu;
+    @FXML
+    private TextField fontSize;
+    @FXML
     private Button imageButton;
+    @FXML
+    private ToolBar imageProperties;
+    @FXML
+    private Button leftAlign;
     @FXML
     private Button logoutButton;
     @FXML
     private MenuItem newCanvasMenu;
     @FXML
+    private Label nodeInfo;
+    @FXML
     private Button profileButton;
     @FXML
     private Button rectButton;
     @FXML
+    private Button rightAlign;
+    @FXML
     private MenuItem saveAsMenu;
+    @FXML
+    private ColorPicker textBackgroundColour;
+    @FXML
+    private ColorPicker textBorderColour;
+    @FXML
+    private TextField textBorderWidth;
     @FXML
     private Button textButton;
     @FXML
+    private ColorPicker textColour;
+    @FXML
+    private ComboBox<?> textFont;
+    @FXML
+    private ToolBar textProperties;
+    @FXML
+    private TextField textText;
+    @FXML
     private Text userName;
-    @FXML
-    private Font x3;
-    @FXML
-    private Font x4;
-    @FXML
-    private Label nodeInfo;
     @FXML
     private Label zoomPercentage;
     @FXML
     private Slider zoomSlider;
-    @FXML
-    private Pane borderPane;
-    @FXML
-    private Menu editMenu;
-    @FXML
-    private Menu fileMenu;
+
 
     private Pane canvas = new Pane();
 
@@ -291,6 +329,10 @@ public class SmartCanvasController {
             clearCanvasMenu.setDisable(true);
             nodeInfo.setText(String.format("x: %.0f y: %.0f w: %.0f h: %.0f angle: %.0f°", 0.00 + 0.00, 0.00 + 0.00, 0.00, 0.00, 0.00));
             deleteMenu.setDisable(true);
+            canvasProperties.setVisible(false);
+            circRectProperties.setVisible(false);
+            textProperties.setVisible(false);
+            imageProperties.setVisible(false);
         }
     }
 
@@ -300,7 +342,32 @@ public class SmartCanvasController {
         if (canvas.getHeight() != 0 && canvas.getWidth() != 0) {
             WritableImage wim = new WritableImage((int) canvas.getHeight(), (int) canvas.getWidth());
             canvas.snapshot(null, wim);
+
             FileChooser fileChooser = new FileChooser();
+            ExtensionFilter bitmapFilter = new FileChooser.ExtensionFilter("Bitmap Files (*.bmp;*.dib)", "*.bmp", "*.dib");
+            ExtensionFilter jpegFilter = new FileChooser.ExtensionFilter("JPEG (*.jpg;*.jpeg;*.jpe;*.jiff)",
+                    "*.jpg", "*.jpeg", "*.jpe", "*.jiff");
+            ExtensionFilter gifFilter = new FileChooser.ExtensionFilter("GIF (*.gif)", "*.gif");
+            ExtensionFilter tiffFilter = new FileChooser.ExtensionFilter("TIFF (*.tif;*.tiff)", "*.tif", "*.tiff");
+            ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG (*.png)", "*.png");
+            ExtensionFilter icoFilter = new FileChooser.ExtensionFilter("ICO (*.ico)", "*.ico");
+            ExtensionFilter heicFilter = new FileChooser.ExtensionFilter("HEIC (*.heic)", "*.heic");
+            ExtensionFilter webpFilter = new FileChooser.ExtensionFilter("WEBP (*.webp)", "*.webp");
+            ExtensionFilter allFilter = new FileChooser.ExtensionFilter("All Picture Files", "*.bmp", "*.dib",
+                    "*.jpg", "*.jpeg", "*.jpe", "*.jiff", "*.gif", "*.tif", "*.tiff", "*.png", "*.ico", "*.heic", "*.webp");
+            ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All Files", "*");
+
+            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.getExtensionFilters().add(allFilter);
+            fileChooser.getExtensionFilters().add(webpFilter);
+            fileChooser.getExtensionFilters().add(heicFilter);
+            fileChooser.getExtensionFilters().add(icoFilter);
+            fileChooser.getExtensionFilters().add(pngFilter);
+            fileChooser.getExtensionFilters().add(tiffFilter);
+            fileChooser.getExtensionFilters().add(gifFilter);
+            fileChooser.getExtensionFilters().add(jpegFilter);
+            fileChooser.getExtensionFilters().add(bitmapFilter);
+
             Stage stage = new Stage();
 
             File file = fileChooser.showSaveDialog(stage);
@@ -315,13 +382,39 @@ public class SmartCanvasController {
 
     @FXML
     void colourCanvas() {
-
+        if (borderPane.getChildren().contains(canvas) == true) {
+            if (canvasProperties.isDisabled() && !canvasProperties.isVisible()) {
+                canvasProperties.setDisable(false);
+                canvasProperties.setVisible(true);
+                circRectProperties.setVisible(false);
+                textProperties.setVisible(false);
+                imageProperties.setVisible(false);
+                selectedElement = canvas;
+                canvasColourPicker.setOnAction(e -> {
+                    if (selectedElement == canvas) {
+                        colorOfSelectedElement = canvasColourPicker.getValue();
+                        ((Pane) selectedElement).setBackground(new Background(new BackgroundFill(colorOfSelectedElement, null, null)));
+                    }
+                });
+            } else if (!canvasProperties.isDisabled() && canvasProperties.isVisible()) {
+                canvasProperties.setDisable(true);
+                canvasProperties.setVisible(false);
+                circRectProperties.setVisible(false);
+                textProperties.setVisible(false);
+                imageProperties.setVisible(false);
+                selectedElement = null;
+            }
+        }
     }
 
 
     @FXML
     void deleteButton() {
         canvas.getChildren().remove(selectedElement);
+        canvasProperties.setVisible(false);
+        circRectProperties.setVisible(false);
+        textProperties.setVisible(false);
+        imageProperties.setVisible(false);
         deleteMenu.setDisable(true);
         if (canvas.getChildren().isEmpty() == true) {
             clearCanvasMenu.setDisable(true);
@@ -353,28 +446,123 @@ public class SmartCanvasController {
     public void select(Node node) {
         selectedElement = node;
         deleteMenu.setDisable(false);
-//        colorOfSelectedElement = (Color) selectedElement.getStroke();
-        if (selectedElement instanceof Circle) {
-            circle.setStroke(Color.RED);
-        } else if (selectedElement instanceof Rectangle) {
-            rectangle.setStroke(Color.RED);
-        } else if (selectedElement instanceof Text) {
-            text.setStroke(Color.RED);
-        } else if (selectedElement instanceof ImageView) {
-            imageView.setStyle("-fx-opacity: 50%");
-        }
+        if (selectedElement instanceof Pane) {
+            canvasProperties.setVisible(true);
+            canvasProperties.setDisable(false);
+            circRectProperties.setVisible(false);
+            textProperties.setVisible(false);
+            imageProperties.setVisible(false);
 
+        } else if (selectedElement instanceof Circle) {
+            circRectProperties.setVisible(true);
+            circRectProperties.setDisable(false);
+            canvasProperties.setVisible(false);
+            textProperties.setVisible(false);
+            imageProperties.setVisible(false);
+            colorOfSelectedElement = (Color) circle.getFill();
+            circle.setStroke(Color.RED);
+
+            circRectColourPicker.setOnAction(e -> {
+                colorOfSelectedElement = circRectColourPicker.getValue();
+                circle.setStroke(colorOfSelectedElement);
+            });
+
+            circRectBackground.setOnAction(e -> {
+                colorOfSelectedElement = circRectBackground.getValue();
+                circle.setFill(colorOfSelectedElement);
+            });
+
+            circRectBorderWidth.setOnKeyReleased(e -> {
+                try {
+                    circle.setStrokeWidth(Double.parseDouble(circRectBorderWidth.getText()));
+                } catch (Exception ex) {
+
+                }
+            });
+
+        } else if (selectedElement instanceof Rectangle) {
+            circRectProperties.setVisible(true);
+            circRectProperties.setDisable(false);
+            canvasProperties.setVisible(false);
+            textProperties.setVisible(false);
+            imageProperties.setVisible(false);
+            colorOfSelectedElement = (Color) rectangle.getFill();
+            rectangle.setStroke(Color.RED);
+
+            circRectColourPicker.setOnAction(e -> {
+                colorOfSelectedElement = circRectColourPicker.getValue();
+                rectangle.setStroke(colorOfSelectedElement);
+            });
+
+            circRectBackground.setOnAction(e -> {
+                colorOfSelectedElement = circRectBackground.getValue();
+                rectangle.setFill(colorOfSelectedElement);
+            });
+
+            circRectBorderWidth.setOnKeyReleased(e -> {
+                try {
+                    rectangle.setStrokeWidth(Double.parseDouble(circRectBorderWidth.getText()));
+                } catch (Exception ex) {
+
+                }
+            });
+
+        } else if (selectedElement instanceof Text) {
+            textProperties.setVisible(true);
+            textProperties.setDisable(false);
+            imageProperties.setVisible(false);
+            canvasProperties.setVisible(false);
+            circRectProperties.setVisible(false);
+            colorOfSelectedElement = (Color) text.getFill();
+            text.setStroke(Color.RED);
+
+            textText.setOnKeyReleased(e -> {
+
+            });
+
+        } else if (selectedElement instanceof ImageView) {
+            imageProperties.setVisible(true);
+            imageProperties.setDisable(false);
+            canvasProperties.setVisible(false);
+            circRectProperties.setVisible(false);
+            textProperties.setVisible(false);
+            imageView.setStyle("-fx-opacity: 50%");
+
+            changePath.setOnAction(e -> {
+                FileChooser fileChooser = new FileChooser();
+                Stage stage = new Stage();
+                File file = fileChooser.showOpenDialog(stage);
+                InputStream fileInputStream;
+                try {
+                    fileInputStream = new FileInputStream(file);
+                    imageView.setImage(new Image(fileInputStream));
+                } catch (FileNotFoundException fileNotFoundException) {
+
+                }
+            });
+        }
     }
 
     public void unselect() {
-        if (selectedElement instanceof Circle) {
+        if (selectedElement instanceof Pane) {
+            canvasProperties.setVisible(false);
+            canvasProperties.setDisable(true);
+        } else if (selectedElement instanceof Circle) {
             circle.setStroke(colorOfSelectedElement);
+            circRectProperties.setVisible(false);
+            circRectProperties.setDisable(true);
         } else if (selectedElement instanceof Rectangle) {
             rectangle.setStroke(colorOfSelectedElement);
+            circRectProperties.setVisible(false);
+            circRectProperties.setDisable(true);
         } else if (selectedElement instanceof Text) {
             text.setStroke(colorOfSelectedElement);
+            textProperties.setVisible(false);
+            textProperties.setDisable(true);
         } else if (selectedElement instanceof ImageView) {
             imageView.setStyle("-fx-opacity: 100%");
+            imageProperties.setVisible(false);
+            imageProperties.setDisable(true);
         }
 
         selectedElement = null;

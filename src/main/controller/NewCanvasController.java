@@ -55,6 +55,8 @@ public class NewCanvasController {
         if (!height.isEmpty() || !width.isEmpty()) {
             canvas.setPrefWidth(Double.parseDouble(width));
             canvas.setPrefHeight(Double.parseDouble(height));
+            borderPane.setPrefHeight(Double.parseDouble(height));
+            borderPane.setPrefWidth(Double.parseDouble(width));
             canvas.setStyle("-fx-background-color: white");
 
             if (borderPane.getChildren().contains(canvas)) {
