@@ -30,8 +30,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -53,9 +53,9 @@
 
 <AnchorPane focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="573.0" minWidth="888.0" prefHeight="573.0" prefWidth="888.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SmartCanvasController">
     <children>
-        <Pane fx:id="borderPane" layoutX="92.0" layoutY="76.0" prefHeight="447.0" prefWidth="535.0" AnchorPane.bottomAnchor="49.80000000000001" AnchorPane.leftAnchor="92.0" AnchorPane.rightAnchor="260.79999999999995" AnchorPane.topAnchor="76.0" />
+        <Pane fx:id="borderPane" layoutX="92.0" layoutY="76.0" prefHeight="447.0" prefWidth="535.0" />
         <ToolBar disable="true" layoutX="649.0" layoutY="53.0" prefHeight="488.0" prefWidth="239.0" AnchorPane.bottomAnchor="26.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="53.0" />
-      <ToolBar fx:id="canvasProperties" disable="true" layoutX="646.0" layoutY="55.0" orientation="VERTICAL" prefHeight="488.0" prefWidth="239.0" visible="false" AnchorPane.bottomAnchor="26.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
+      <ToolBar fx:id="canvasProperties" layoutX="646.0" layoutY="55.0" orientation="VERTICAL" prefHeight="488.0" prefWidth="239.0" visible="false" AnchorPane.bottomAnchor="26.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
          <items>
             <Pane prefHeight="438.0" prefWidth="231.0">
                <children>
@@ -65,18 +65,17 @@
             </Pane>
          </items>
       </ToolBar>
-      <ToolBar fx:id="textProperties" disable="true" layoutX="649.0" layoutY="55.0" orientation="VERTICAL" prefHeight="488.0" prefWidth="239.0" visible="false" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
+      <ToolBar fx:id="textProperties" layoutX="649.0" layoutY="55.0" orientation="VERTICAL" prefHeight="488.0" prefWidth="239.0" visible="false" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
          <items>
-            <Pane prefHeight="438.0" prefWidth="231.0">
+            <Pane prefHeight="467.0" prefWidth="231.0">
                <children>
-                  <Label layoutX="14.0" layoutY="33.0" text="Text:" />
-                  <TextField layoutX="107.0" layoutY="29.0" prefHeight="25.0" prefWidth="110.0" />
-                  <Label layoutX="14.0" layoutY="73.0" text="Font:" />
-                  <ComboBox layoutX="107.0" layoutY="69.0" prefHeight="25.0" prefWidth="110.0" />
-                  <Label layoutX="15.0" layoutY="115.0" text="Font Size:" />
-                  <TextField layoutX="107.0" layoutY="111.0" prefHeight="25.0" prefWidth="110.0" />
-                  <Label layoutX="15.0" layoutY="158.0" text="Attributes:" />
-                  <Button layoutX="106.0" layoutY="151.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="26.0">
+                  <Label layoutX="14.0" layoutY="18.0" text="Text:" />
+                  <TextField fx:id="textText" layoutX="107.0" layoutY="14.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="14.0" layoutY="51.0" text="Font:" />
+                  <Label layoutX="15.0" layoutY="84.0" text="Font Size:" />
+                  <TextField fx:id="fontSize" layoutX="107.0" layoutY="80.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="15.0" layoutY="120.0" text="Attributes:" />
+                  <Button fx:id="Bold" layoutX="106.0" layoutY="113.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="26.0">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -85,7 +84,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button layoutX="152.0" layoutY="151.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="37.0">
+                  <Button fx:id="Italics" layoutX="152.0" layoutY="113.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="37.0">
                      <graphic>
                         <ImageView fitHeight="19.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -94,10 +93,10 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Label layoutX="15.0" layoutY="202.0" text="Text Colour:" />
-                  <ColorPicker layoutX="105.0" layoutY="198.0" prefHeight="25.0" prefWidth="110.0" />
-                  <Label layoutX="16.0" layoutY="242.0" text="Allignment:" />
-                  <Button layoutX="104.0" layoutY="235.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="32.0">
+                  <Label layoutX="15.0" layoutY="155.0" text="Text Colour:" />
+                  <ColorPicker fx:id="textColour" layoutX="105.0" layoutY="151.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="16.0" layoutY="193.0" text="Allignment:" />
+                  <Button fx:id="leftAlign" layoutX="104.0" layoutY="186.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="32.0">
                      <graphic>
                         <ImageView fitHeight="19.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -106,7 +105,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button layoutX="144.0" layoutY="235.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="32.0">
+                  <Button fx:id="centerAlign" layoutX="144.0" layoutY="186.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="32.0">
                      <graphic>
                         <ImageView fitHeight="21.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -115,7 +114,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button layoutX="183.0" layoutY="235.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="26.0">
+                  <Button fx:id="rightAlign" layoutX="183.0" layoutY="186.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="26.0">
                      <graphic>
                         <ImageView fitHeight="21.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -124,18 +123,25 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Separator layoutX="16.0" layoutY="283.0" prefWidth="200.0" />
-                  <Label layoutX="14.0" layoutY="340.0" text="Border Width:" />
-                  <TextField layoutX="103.0" layoutY="336.0" prefHeight="25.0" prefWidth="110.0" />
-                  <Label layoutX="15.0" layoutY="304.0" text="Border Colour:" />
-                  <ColorPicker layoutX="103.0" layoutY="300.0" prefHeight="25.0" prefWidth="110.0" />
-                  <Separator layoutX="16.0" layoutY="371.0" prefWidth="200.0" />
-                  <Label layoutX="14.0" layoutY="392.0" text="Background:" />
-                  <ColorPicker layoutX="104.0" layoutY="388.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Separator layoutX="16.0" layoutY="228.0" prefWidth="200.0" />
+                  <Label layoutX="14.0" layoutY="274.0" text="Border Width:" />
+                  <TextField fx:id="textStrokeWidth" layoutX="103.0" layoutY="271.0" prefHeight="3.0" prefWidth="110.0" />
+                  <Label layoutX="15.0" layoutY="242.0" text="Border Colour:" />
+                  <ColorPicker fx:id="textStrokeColour" layoutX="103.0" layoutY="238.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Separator layoutX="16.0" layoutY="311.0" prefWidth="200.0" />
+                  <Label layoutX="14.0" layoutY="329.0" text="Background:" />
+                  <ColorPicker fx:id="textBackgroundColour" layoutX="104.0" layoutY="325.0" prefHeight="25.0" prefWidth="110.0" />
+                  <ChoiceBox fx:id="textFont" layoutX="107.0" layoutY="47.0" prefHeight="18.0" prefWidth="110.0" />
+                  <Label layoutX="15.0" layoutY="363.0" text="Width:" />
+                  <TextField fx:id="textWidth" layoutX="104.0" layoutY="359.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="15.0" layoutY="397.0" text="Height:" />
+                  <TextField fx:id="textHeight" layoutX="104.0" layoutY="393.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="15.0" layoutY="430.0" text="Rotate:" />
+                  <TextField fx:id="textRotate" layoutX="104.0" layoutY="426.0" prefHeight="25.0" prefWidth="110.0" />
                </children>
             </Pane>
          </items></ToolBar>
-      <ToolBar fx:id="circRectProperties" disable="true" layoutX="647.0" layoutY="55.0" orientation="VERTICAL" prefHeight="488.0" prefWidth="239.0" visible="false">
+      <ToolBar fx:id="circRectProperties" layoutX="647.0" layoutY="55.0" orientation="VERTICAL" prefHeight="488.0" prefWidth="239.0" visible="false">
          <items>
             <Pane prefHeight="438.0" prefWidth="231.0">
                <children>
@@ -146,16 +152,30 @@
                   <Separator layoutX="17.0" layoutY="99.0" prefWidth="200.0" />
                   <Label layoutX="15.0" layoutY="120.0" text="Background:" />
                   <ColorPicker fx:id="circRectBackground" layoutX="105.0" layoutY="116.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="16.0" layoutY="154.0" text="Width:" />
+                  <TextField fx:id="shapeWidth" layoutX="105.0" layoutY="150.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="16.0" layoutY="189.0" text="Height:" />
+                  <TextField fx:id="shapeHeight" layoutX="105.0" layoutY="185.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="16.0" layoutY="223.0" text="Rotate:" />
+                  <TextField fx:id="shapeRotate" layoutX="105.0" layoutY="219.0" prefHeight="25.0" prefWidth="110.0" />
+                  <Label layoutX="16.0" layoutY="259.0" text="Radius:" />
+                  <TextField fx:id="shapeRadius" layoutX="105.0" layoutY="255.0" prefHeight="25.0" prefWidth="110.0" />
                </children>
             </Pane>
          </items>
       </ToolBar>
-      <ToolBar fx:id="imageProperties" disable="true" layoutX="647.0" layoutY="54.0" orientation="VERTICAL" prefHeight="488.0" prefWidth="239.0" visible="false">
+      <ToolBar fx:id="imageProperties" layoutX="647.0" layoutY="54.0" orientation="VERTICAL" prefHeight="488.0" prefWidth="239.0" visible="false">
          <items>
             <Pane prefHeight="438.0" prefWidth="231.0">
                <children>
                   <Label layoutX="15.0" layoutY="32.0" text="Image:" />
                   <Button fx:id="changePath" layoutX="107.0" layoutY="28.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="110.0" text="Change Path" />
+                  <Label layoutX="14.0" layoutY="72.0" text="Width:" />
+                  <Label layoutX="13.0" layoutY="111.0" text="Length:" />
+                  <Label layoutX="13.0" layoutY="147.0" text="Rotate:" />
+                  <TextField fx:id="imageWidth" layoutX="107.0" layoutY="68.0" prefHeight="25.0" prefWidth="110.0" />
+                  <TextField fx:id="imageLength" layoutX="107.0" layoutY="107.0" prefHeight="25.0" prefWidth="110.0" />
+                  <TextField fx:id="imageRotate" layoutX="107.0" layoutY="143.0" prefHeight="25.0" prefWidth="110.0" />
                </children>
             </Pane>
          </items>

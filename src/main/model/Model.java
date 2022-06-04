@@ -11,46 +11,55 @@ import java.sql.SQLException;
 
 public class Model {
 
+    // Variable Declarations
     public static File file;
-    public static String loggedUser = new String();
-    private UserDao userDao;
+    public static String loggedUser = "";
+    private final UserDao userDao;
     private User currentUser;
 
+    // Method to Hash Passwords and convert it into hex format
     public static String hashPassword(String password) throws NoSuchAlgorithmException {
         // Static getInstance method is called with hashing MD5
-        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
 
         // digest() method is called to calculate message digest
         //  of an input digest() return array of byte
-        byte[] hashedPassword = md.digest(password.getBytes());
+        byte[] hashedPassword = messageDigest.digest(password.getBytes());
 
         // Convert byte array into signum representation
-        BigInteger no = new BigInteger(1, hashedPassword);
+        BigInteger bigInteger = new BigInteger(1, hashedPassword);
 
         // Convert message digest into hex value
-        String hashtext = no.toString(16);
-        while (hashtext.length() < 32) {
-            hashtext = "0" + hashtext;
+        String hashedText = bigInteger.toString(16);
+        while (hashedText.length() < 32) {
+            hashedText = "0" + hashedText;
         }
-        return hashtext;
+
+        // Returns hashed password
+        return hashedText;
     }
 
+    // Creates an UserDao implementation object
     public Model() {
         userDao = new UserDaoImpl();
     }
 
+    // Sets up the DB, creates a table
     public void setup() throws SQLException {
         userDao.setup();
     }
 
+    // Gets users from the Database
     public UserDao getUserDao() {
         return userDao;
     }
 
+    // Gets the current User that is logged in which is assigned when user logs in
     public User getCurrentUser() {
         return this.currentUser;
     }
 
+    // Sets the current user at login
     public void setCurrentUser(User user) {
         currentUser = user;
     }

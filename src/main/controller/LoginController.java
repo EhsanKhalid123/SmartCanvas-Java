@@ -14,9 +14,11 @@ import model.User;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class LoginController {
 
+    // Variable Declarations - Javafx Components Based on SceneBuilder
     @FXML
     private PasswordField loginPassword;
     @FXML
@@ -24,48 +26,56 @@ public class LoginController {
     @FXML
     private Label message;
 
-    private Model model;
-
+    // Login Button Action EventHandler Created in SceneBuilder
     @FXML
     public void login() throws IOException, SQLException, NoSuchAlgorithmException {
 
+        // Variable Declaration - Gets textFields input
         String username = loginUsername.getText();
         String password = loginPassword.getText();
+        // Hashes Password
         String hashedPassword = Model.hashPassword(password);
 
+        // Conditional Statement to Validate User Input Field
         if (username.isBlank()) {
             message.setText("Please Enter Username");
         } else if (password.isBlank()) {
             message.setText("Please Enter Password");
         } else {
-            model = new Model();
+            Model model = new Model();
             User user;
+            // Compare user input data to data stored in DB
             user = model.getUserDao().getUser(username, hashedPassword);
+            // If data matches and is not null then login the user
             if (user != null) {
                 model.setCurrentUser(user);
                 Model.loggedUser = user.getUsername();
                 Main.setWindow("resources/views/SmartCanvas", 900, 610, "SmartCanvas", true);
             } else {
+                // Error Message
                 message.setText("Username and Password doesn't exist!");
             }
         }
     }
 
+    // Register Button Action EventHandler Created in SceneBuilder
     @FXML
     void registerWindow() throws Exception {
+        // Steps to create a new Window and Basic Properties
         Stage stage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/views/Register.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/Register.fxml")));
         stage.setTitle("Create a new user");
         stage.setScene(new Scene(root, 392, 590));
         stage.setResizable(false);
-        Image icon = new Image(getClass().getResourceAsStream("/views/Whiteboard-512.png"));
+        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/views/Whiteboard-512.png")));
         stage.getIcons().add(icon);
         stage.show();
     }
 
+    // Close Button Action EventHandler Created in SceneBuilder
+    @FXML
     public void close() {
         Platform.exit();
     }
-
 
 }
