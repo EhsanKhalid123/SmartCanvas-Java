@@ -555,7 +555,7 @@ public class SmartCanvasController {
 
     // REFERENCE: https://www.javafixing.com/2022/01/fixed-how-to-convert-color-from.html
     // Converts String Colour Characters to Hex Code
-    private static String hexConvert(Color color) {
+    public String hexConvert(Color color) {
         int r = ((int) Math.round(color.getRed() * 255)) << 24;
         int g = ((int) Math.round(color.getGreen() * 255)) << 16;
         int b = ((int) Math.round(color.getBlue() * 255)) << 8;

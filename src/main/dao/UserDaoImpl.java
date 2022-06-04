@@ -100,9 +100,11 @@ public class UserDaoImpl implements UserDao {
                     user.setFirstname(rs.getString("firstname"));
                     user.setLastname(rs.getString("lastname"));
                     Blob blob = rs.getBlob("image");
-                    InputStream inputStream = blob.getBinaryStream();
-                    Image image = new Image(inputStream);
-                    user.setDp(image);
+                    if (blob != null) {
+                        InputStream inputStream = blob.getBinaryStream();
+                        Image image = new Image(inputStream);
+                        user.setDp(image);
+                    }
                     return user;
                 }
                 return null;

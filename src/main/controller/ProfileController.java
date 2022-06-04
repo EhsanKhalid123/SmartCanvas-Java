@@ -118,13 +118,13 @@ public class ProfileController {
         Stage stage = new Stage();
 
         // Assigns the selected file to model.file
-        model.file = fileChooser.showOpenDialog(stage);
+        Model.file = fileChooser.showOpenDialog(stage);
         // If file is null then chooses a default photo and displays it
-        if (model.file == null) {
+        if (Model.file == null) {
             profilePic.setImage(initialImage);
         } else {
             // If file not null then displays the chosen photo
-            Image image = new Image(model.file.toURI().toString());
+            Image image = new Image(Model.file.toURI().toString());
             profilePic.setImage(image);
         }
     }

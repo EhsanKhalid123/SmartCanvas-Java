@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Objects;
 
 public class RegisterController {
     // Variable Declarations - Javafx Components Based on SceneBuilder
@@ -119,7 +118,10 @@ public class RegisterController {
         try {
             // If no file is chosen or is null then select a default Image
             if (Model.file == null) {
-                image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/views/defaultDP.png")));
+                URL defaultImage = getClass().getResource("/views/defaultDP.png");
+                assert defaultImage != null;
+                Model.file = new File(defaultImage.toURI());
+                image = new Image(String.valueOf(defaultImage));
             } else {
                 // If file is chosen then convert that into FIS and store it into image variable
                 FileInputStream fileInputStream = new FileInputStream(Model.file);
